@@ -1,7 +1,7 @@
-package com.example.ApuDaily.post.service;
+package com.example.ApuDaily.publication.post.service;
 
-import com.example.ApuDaily.post.model.Post;
-import com.example.ApuDaily.post.repository.PostRepository;
+import com.example.ApuDaily.publication.post.model.Post;
+import com.example.ApuDaily.publication.post.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
