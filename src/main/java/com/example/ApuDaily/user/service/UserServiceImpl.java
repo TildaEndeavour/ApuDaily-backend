@@ -3,6 +3,7 @@ package com.example.ApuDaily.user.service;
 import com.example.ApuDaily.exception.ApiException;
 import com.example.ApuDaily.exception.ErrorMessage;
 import com.example.ApuDaily.user.dto.SignupRequestDto;
+import com.example.ApuDaily.user.dto.UserResponseDto;
 import com.example.ApuDaily.user.model.Role;
 import com.example.ApuDaily.user.model.User;
 import com.example.ApuDaily.user.repository.RoleRepository;
@@ -57,5 +58,14 @@ public class UserServiceImpl implements UserService{
                 .build();
 
         userRepository.save(user);
+    }
+
+    @Override
+    public UserResponseDto getUserDetailsById(long userId) {
+        UserResponseDto responseDto = userRepository
+                .findById(userId)
+                .map(user -> modelMapper.map(user, UserResponseDto.class))
+                .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND, userId, HttpStatus.NOT_FOUND));
+        return responseDto;
     }
 }

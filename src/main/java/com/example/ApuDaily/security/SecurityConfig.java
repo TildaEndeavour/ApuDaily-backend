@@ -44,17 +44,12 @@ public class SecurityConfig {
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(jwtAuthEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest()
-                                .permitAll());
-                /*
-                .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, apiUrl.getAuthUrl())
                         .permitAll()
                         .requestMatchers(HttpMethod.POST, apiUrl.getSignupUrl())
                         .permitAll()
                         .anyRequest()
                         .authenticated());
-                 */
 
         httpSecurity.authenticationProvider(authenticationProvider());
         httpSecurity.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
