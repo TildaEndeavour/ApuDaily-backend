@@ -33,6 +33,10 @@ public class User {
     @Column(name= "created_at", nullable = false, unique = false)
     private LocalDateTime createdAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id") // FOREIGN KEY(role_id) REFERENCES roles(id)
+    private Role role;
+
     @OneToMany(mappedBy = "user")
     private List<Post> posts;
 
