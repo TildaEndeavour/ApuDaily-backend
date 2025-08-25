@@ -4,7 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="users_init" author="TildaEndeavour" context="structure">
+    <changeSet id="users_init" author="TildaEndeavour" context="dev">
         <comment>Create roles and users tables</comment>
 
         <createTable tableName="roles">
@@ -35,6 +35,45 @@
         </createTable>
 
         <sqlFile path="sql/roles_init.sql" relativeToChangelogFile="true" endDelimiter=";" splitStatements="true"/>
+    </changeSet>
+
+    <changeSet id="images_init" author="TildaEndeavour" context="dev">
+        <comment>Create attachable images for posts</comment>
+
+        <createTable tableName="image_statuses">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="media">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="post_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+            <column name="status_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_status_id" references="image_statuses(id)"/>
+            </column>
+            <column name="filename" type="varchar">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="extension" type="varchar">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="url" type="varchar">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false" unique="false"/>
+            </column>
+        </createTable>
+
+        <sqlFile path="sql/media_statuses_init.sql" relativeToChangelogFile="true" endDelimiter=";" splitStatements="true"/>
     </changeSet>
 
 </databaseChangeLog>
