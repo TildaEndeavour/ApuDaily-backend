@@ -37,10 +37,10 @@
         <sqlFile path="sql/roles_init.sql" relativeToChangelogFile="true" endDelimiter=";" splitStatements="true"/>
     </changeSet>
 
-    <changeSet id="images_init" author="TildaEndeavour" context="dev">
+    <changeSet id="media_init" author="TildaEndeavour" context="dev">
         <comment>Create attachable images for posts</comment>
 
-        <createTable tableName="image_statuses">
+        <createTable tableName="media_statuses">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
@@ -57,7 +57,7 @@
                 <constraints nullable="true"/>
             </column>
             <column name="status_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_status_id" references="image_statuses(id)"/>
+                <constraints nullable="false" foreignKeyName="fk_status_id" references="media_statuses(id)"/>
             </column>
             <column name="filename" type="varchar">
                 <constraints nullable="false" unique="true"/>

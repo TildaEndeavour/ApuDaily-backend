@@ -1,4 +1,4 @@
-INSERT INTO image_statuses(name) VALUES
+INSERT INTO media_statuses(name) VALUES
 ('TEMPORARY'),
 ('ACTIVE'),
 ('ORPHAN');

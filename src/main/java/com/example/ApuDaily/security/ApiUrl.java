@@ -26,5 +26,5 @@ public class ApiUrl {
     private String uploadUrl;
 
     @Value("/uploads/**")
-    private String imagesUrl;
+    private String mediaUrl;
 }

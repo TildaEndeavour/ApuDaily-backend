@@ -50,7 +50,7 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers(HttpMethod.POST, apiUrl.getUploadUrl())
                         .permitAll()
-                        .requestMatchers(HttpMethod.GET, apiUrl.getImagesUrl())
+                        .requestMatchers(HttpMethod.GET, apiUrl.getMediaUrl())
                         .permitAll()
                         .anyRequest()
                         .authenticated());
