@@ -1,8 +1,6 @@
 package com.example.ApuDaily.publication.post.model;
 
 import com.example.ApuDaily.publication.comment.model.Comment;
-import com.example.ApuDaily.publication.image.model.Image;
-import com.example.ApuDaily.publication.post.content.model.ContentBlock;
 import com.example.ApuDaily.publication.tag.model.Tag;
 import com.example.ApuDaily.user.model.User;
 import jakarta.persistence.*;
@@ -36,9 +34,6 @@ public class Post {
 
     @Column(name = "view_count", nullable = false, unique = false)
     private int viewCount;
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<ContentBlock> contentBlock;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
