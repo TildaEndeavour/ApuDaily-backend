@@ -76,4 +76,40 @@
         <sqlFile path="sql/media_statuses_init.sql" relativeToChangelogFile="true" endDelimiter=";" splitStatements="true"/>
     </changeSet>
 
+    <changeSet id="posts_init" author="TildaEndeavour" context="dev">
+        <comment>Create basics in-app publications</comment>
+
+        <createTable tableName="posts">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="true" foreignKeyName="fk_user_id" references="users(id)"/>
+            </column>
+            <column name="thumbnail_media_id" type="bigint">
+                <constraints nullable="true" foreignKeyName="fk_media_id" references="media(id)"/>
+            </column>
+            <column name="title" type="varchar">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="description" type="varchar">
+                <constraints nullable="true" unique="false"/>
+            </column>
+            <column name="content" type="jsonb">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="view_count" type="bigint">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="created_at" type="datetime">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="updated_at" type="datetime">
+                <constraints nullable="false" unique="false"/>
+            </column>
+        </createTable>
+
+        <sqlFile path="sql/posts_init.sql" relativeToChangelogFile="true" endDelimiter=";" splitStatements="true"/>
+    </changeSet>
+
 </databaseChangeLog>
