@@ -1,19 +1,16 @@
-package com.example.ApuDaily.publication.tag.model;
+package com.example.ApuDaily.publication.cotegory.model;
 
-import com.example.ApuDaily.publication.post.model.Post;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.List;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tags")
+@Table(name = "categories")
 @Entity
-public class Tag {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
