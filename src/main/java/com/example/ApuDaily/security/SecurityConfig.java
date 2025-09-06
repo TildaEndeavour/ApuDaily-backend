@@ -52,6 +52,8 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, apiUrl.getMediaUrl())
                         .permitAll()
+                        .requestMatchers(HttpMethod.GET, apiUrl.getPostsUrl())
+                        .permitAll()
                         .anyRequest()
                         .authenticated());
 
