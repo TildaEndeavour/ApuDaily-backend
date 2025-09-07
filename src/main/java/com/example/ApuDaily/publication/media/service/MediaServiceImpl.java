@@ -40,11 +40,11 @@ public class MediaServiceImpl implements MediaService {
     @Override
     public String store(MultipartFile file) throws IOException {
 
-        // Check if file is empty
-        if(file.isEmpty()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Empty file");
-
         // Check supported extensions
         if(!isValidFileType(file)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This file extension isn't supported");
+
+        // Check if file is empty
+        if(file.isEmpty()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Empty file");
 
         String filename = UUID.randomUUID().toString();
         String ext = getExtension(file.getOriginalFilename());
