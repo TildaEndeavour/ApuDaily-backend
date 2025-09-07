@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("${api.basePath}/${api.version}")
@@ -19,8 +21,10 @@ public class MediaController {
     MediaService mediaService;
 
     @PostMapping("/upload")
-    public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) throws IOException{
+    public ResponseEntity<Map<String, String>> upload(@RequestParam("file") MultipartFile file) throws IOException{
         String path = mediaService.store(file);
-        return ResponseEntity.ok().body(path);
+        Map<String, String> response = new HashMap<>();
+        response.put("path", path);
+        return ResponseEntity.ok(response);
     }
 }
