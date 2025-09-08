@@ -112,4 +112,33 @@
         <sqlFile path="sql/posts_init.sql" relativeToChangelogFile="true" endDelimiter=";" splitStatements="true"/>
     </changeSet>
 
+    <changeSet id="category_init" author="TildaEndeavour">
+        <comment>Create initial categories list</comment>
+
+        <createTable tableName="categories">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="slug" type="varchar">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+
+        <sqlFile path="sql/categories_init.sql" relativeToChangelogFile="true" endDelimiter=";" splitStatements="true"/>
+    </changeSet>
+
+    <changeSet id="tags_init" author="TildaEndeavour">
+        <createTable tableName="tags">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
 </databaseChangeLog>
