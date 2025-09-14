@@ -1,7 +1,9 @@
 package com.example.ApuDaily.publication.post.controller;
 
+import com.example.ApuDaily.publication.post.dto.PostCreateRequestDto;
 import com.example.ApuDaily.publication.post.dto.PostResponseDto;
 import com.example.ApuDaily.publication.post.service.PostService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -22,5 +24,11 @@ public class PostController {
     ){
         Page<PostResponseDto> dtoPage = postService.getPosts(pageNumber,pageSize);
         return ResponseEntity.ok(dtoPage);
+    }
+
+    @PostMapping(consumes = {"multipart/form-data"})
+    public ResponseEntity<String> createPost(@Valid @ModelAttribute PostCreateRequestDto requestDto){
+        postService.createPost(requestDto);
+        return ResponseEntity.ok("Post created successfully");
     }
 }

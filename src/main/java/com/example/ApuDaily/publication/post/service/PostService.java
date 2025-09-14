@@ -1,5 +1,6 @@
 package com.example.ApuDaily.publication.post.service;
 
+import com.example.ApuDaily.publication.post.dto.PostCreateRequestDto;
 import com.example.ApuDaily.publication.post.dto.PostResponseDto;
 import org.springframework.data.domain.Page;
 
@@ -8,4 +9,6 @@ public interface PostService {
         int currentPageNumber,
         int pageSize
     );
+
+    PostResponseDto createPost(PostCreateRequestDto requestDto);
 }

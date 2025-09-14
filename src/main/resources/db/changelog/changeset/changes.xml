@@ -95,7 +95,10 @@
             <column name="description" type="varchar">
                 <constraints nullable="true" unique="false"/>
             </column>
-            <column name="content" type="jsonb">
+            <column name="content" type="varchar">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="category_id" type="bigint">
                 <constraints nullable="false" unique="false"/>
             </column>
             <column name="view_count" type="bigint">
@@ -137,6 +140,20 @@
             </column>
             <column name="name" type="varchar">
                 <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="posts_tags_init" author="TildaEndeavour">
+        <createTable tableName="posts_tags">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="post_id" type="bigint">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="tag_id" type="bigint">
+                <constraints nullable="false" unique="false"/>
             </column>
         </createTable>
     </changeSet>

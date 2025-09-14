@@ -23,7 +23,7 @@ public class PostResponseDto {
 
     private String description;
 
-    private Map<String, Object> content;
+    private String content;
 
     private int viewCount;
 

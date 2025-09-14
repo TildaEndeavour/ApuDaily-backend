@@ -10,15 +10,18 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostCreateRequestDto {
-    private String thumbnailUrl;
+    private Long author;
 
     private String title;
 
-    private Long categoryId;
+    private String thumbnailUrl;
 
-    private List<Long> tagsId;
+    private Long category;
+
+    private List<Long> tags;
 
     private String description;
 
-    private Map<String, Object> content;
+    //private Map<String, Object> content;
+    private String content;
 }
