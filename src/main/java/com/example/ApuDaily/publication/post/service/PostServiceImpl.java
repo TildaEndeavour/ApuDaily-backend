@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostServiceImpl implements PostService{
@@ -46,11 +47,9 @@ public class PostServiceImpl implements PostService{
     @Transactional
     public Post createPost(PostCreateRequestDto requestDto){
 
-        User user;
-        if(requestDto.getAuthorId() != null)
-        user = userRepository.findById(requestDto.getAuthorId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        else user = null;
+        User user = Optional.ofNullable(requestDto.getAuthorId())
+                .flatMap(authorId -> userRepository.findById(authorId))
+                .orElse(null);
 
         Category category = categoryRepository.findById(requestDto.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
@@ -61,8 +60,9 @@ public class PostServiceImpl implements PostService{
             throw new RuntimeException("One or more tags not found");
         }
 
-        Media thumbnail = mediaRepository.findById(requestDto.getThumbnailId())
-                .orElseThrow(() -> new RuntimeException("Thumbnail not found"));
+        Media thumbnail = Optional.ofNullable(requestDto.getThumbnailId())
+                .flatMap(mediaId -> mediaRepository.findById(mediaId))
+                .orElse(null);
 
         return postRepository.save(Post.builder()
                 .user(user)
