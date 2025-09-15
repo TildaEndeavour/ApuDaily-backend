@@ -6,6 +6,7 @@ import com.example.ApuDaily.publication.media.dto.MediaResponseDto;
 import com.example.ApuDaily.publication.tag.dto.TagResponseDto;
 import com.example.ApuDaily.publication.tag.model.Tag;
 import com.example.ApuDaily.user.dto.UserResponseDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -36,7 +37,9 @@ public class PostResponseDto {
 
     private List<TagResponseDto> tags;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private LocalDateTime createdAt;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private LocalDateTime updatedAt;
 }
