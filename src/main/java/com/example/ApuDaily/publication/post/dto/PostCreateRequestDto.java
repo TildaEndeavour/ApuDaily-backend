@@ -2,7 +2,6 @@ package com.example.ApuDaily.publication.post.dto;
 import lombok.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -10,18 +9,17 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostCreateRequestDto {
-    private Long author;
+    private Long authorId;
+
+    private Long thumbnailId;
 
     private String title;
 
-    private String thumbnailUrl;
+    private Long categoryId;
 
-    private Long category;
-
-    private List<Long> tags;
+    private List<Long> tagsId;
 
     private String description;
 
-    //private Map<String, Object> content;
     private String content;
 }

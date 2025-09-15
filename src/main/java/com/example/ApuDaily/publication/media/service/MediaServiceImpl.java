@@ -38,7 +38,7 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public String store(MultipartFile file) throws IOException {
+    public Media store(MultipartFile file) throws IOException {
 
         // Check supported extensions
         if(!isValidFileType(file)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This file extension isn't supported");
@@ -57,17 +57,13 @@ public class MediaServiceImpl implements MediaService {
 
         String resultUrl = "/uploads/" + filename + ext;
 
-        Media media = Media.builder()
+        return mediaRepository.save(Media.builder()
                 .statusId((short) 1)
                 .filename(filename)
                 .extension(ext)
                 .url(resultUrl)
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
-                .build();
-
-        mediaRepository.save(media);
-
-        return resultUrl;
+                .build());
     }
 
     private boolean isValidFileType(MultipartFile file) throws IOException{

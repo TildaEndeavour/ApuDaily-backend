@@ -31,7 +31,7 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "thumbnail_media_id")
     private Media thumbnail;
 
@@ -43,13 +43,12 @@ public class Post {
 
     @Column(name="content", nullable = false, unique = false)
     private String content;
-    //private Map<String, Object> content;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "posts_tags",
             joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),

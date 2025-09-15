@@ -111,8 +111,6 @@
                 <constraints nullable="false" unique="false"/>
             </column>
         </createTable>
-
-        <sqlFile path="sql/posts_init.sql" relativeToChangelogFile="true" endDelimiter=";" splitStatements="true"/>
     </changeSet>
 
     <changeSet id="category_init" author="TildaEndeavour">
