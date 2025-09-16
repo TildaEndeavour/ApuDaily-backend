@@ -9,6 +9,7 @@ import com.example.ApuDaily.publication.post.model.Post;
 import com.example.ApuDaily.publication.post.repository.PostRepository;
 import com.example.ApuDaily.publication.tag.model.Tag;
 import com.example.ApuDaily.publication.tag.repository.TagRepository;
+import com.example.ApuDaily.security.HtmlSanitizerUtil;
 import com.example.ApuDaily.user.model.User;
 import com.example.ApuDaily.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -69,7 +70,7 @@ public class PostServiceImpl implements PostService{
                 .title(requestDto.getTitle())
                 .description(requestDto.getDescription())
                 .thumbnail(thumbnail)
-                .content(requestDto.getContent())
+                .content(HtmlSanitizerUtil.sanitize(requestDto.getContent()))
                 .category(category)
                 .tags(tags)
                 .viewCount(0)
