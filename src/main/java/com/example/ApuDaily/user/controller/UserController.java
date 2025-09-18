@@ -24,7 +24,7 @@ public class UserController {
     AuthUtil authUtil;
 
     @PostMapping
-    public ResponseEntity<?> signup(@Valid @RequestBody SignupRequestDto requestDto){
+    public ResponseEntity<?> signup(@Valid @ModelAttribute SignupRequestDto requestDto){
         userService.createUser(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

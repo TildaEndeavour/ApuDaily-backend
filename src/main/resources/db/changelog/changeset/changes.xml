@@ -32,6 +32,9 @@
             <column name="role_id" type="bigint">
                 <constraints nullable="false" foreignKeyName="fk_role_id" references="roles(id)"/>
             </column>
+            <column name="created_at" type="datetime">
+                <constraints nullable="false" unique="false"/>
+            </column>
         </createTable>
 
         <sqlFile path="sql/roles_init.sql" relativeToChangelogFile="true" endDelimiter=";" splitStatements="true"/>
