@@ -1,6 +1,8 @@
 package com.example.ApuDaily.publication.post.model;
 
+import com.example.ApuDaily.publication.category.model.Category;
 import com.example.ApuDaily.publication.media.model.Media;
+import com.example.ApuDaily.publication.tag.model.Tag;
 import com.example.ApuDaily.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,6 +10,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -28,7 +31,7 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "thumbnail_media_id")
     private Media thumbnail;
 
@@ -38,26 +41,25 @@ public class Post {
     @Column(name = "description", nullable = true, unique = false)
     private String description;
 
-    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name="content", nullable = false, unique = false)
-    private Map<String, Object> content;
-
-    /*
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<Comment> comments;
+    private String content;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "posts_tags",
             joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
     private List<Tag> tags;
 
+    /*
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Comment> comments;
      */
+
     @Column(name = "view_count", nullable = false, unique = false)
     private int viewCount;
 

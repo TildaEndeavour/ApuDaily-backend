@@ -15,17 +15,23 @@ import java.io.PrintWriter;
 
 @Component
 public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException{
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-        ExceptionDto exceptionDto = new ExceptionDto(authException.getMessage());
+        ExceptionDto exceptionDto = ExceptionDto.builder()
+                .status(HttpStatus.UNAUTHORIZED.value())
+                .error(HttpStatus.UNAUTHORIZED.getReasonPhrase())
+                .message(authException.getMessage())
+                .path(request.getRequestURI())
+                .build();
 
-        PrintWriter out = response.getWriter();
-        ObjectMapper objectMapper = new ObjectMapper();
-        out.write(objectMapper.writeValueAsString(exceptionDto));
-        out.flush();
+        response.getWriter().write(objectMapper.writeValueAsString(exceptionDto));
+        response.getWriter().flush();
     }
 }

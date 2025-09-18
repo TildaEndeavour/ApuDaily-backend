@@ -1,4 +1,4 @@
-package com.example.ApuDaily.user.dto;
+package com.example.ApuDaily.publication.tag.dto;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponseDto {
+public class TagResponseDto {
     private Long id;
-    private String username;
+    private String name;
 }
