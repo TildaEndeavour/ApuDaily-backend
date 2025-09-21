@@ -21,7 +21,7 @@ import java.util.Map;
 public class PostResponseDto {
     private Long id;
 
-    private UserResponseDto author;
+    private UserResponseDto user;
 
     private MediaResponseDto thumbnail;
 

@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +32,8 @@ public class PostController {
         return ResponseEntity.ok(postPage.map(post -> modelMapper.map(post, PostResponseDto.class)));
     }
 
-    @PostMapping(consumes = {"multipart/form-data"})
-    public ResponseEntity<PostResponseDto> createPost(@Valid @ModelAttribute PostCreateRequestDto requestDto){
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PostResponseDto> createPost(@Valid @RequestBody PostCreateRequestDto requestDto){
         Post post = postService.createPost(requestDto);
         return ResponseEntity.ok(modelMapper.map(post, PostResponseDto.class));
     }
