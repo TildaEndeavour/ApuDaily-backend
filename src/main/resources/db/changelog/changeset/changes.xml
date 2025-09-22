@@ -159,4 +159,21 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="refresh_token_init" author="TildaEndeavour">
+        <createTable tableName="refresh_token">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="token" type="varchar">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="expiry_date" type="timestamp with time zone">
+                <constraints nullable="false" unique="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
 </databaseChangeLog>

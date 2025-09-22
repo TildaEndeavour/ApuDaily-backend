@@ -2,6 +2,7 @@ package com.example.ApuDaily.security;
 
 import com.example.ApuDaily.exception.ApiException;
 import com.example.ApuDaily.exception.ErrorMessage;
+import com.example.ApuDaily.user.model.User;
 import com.example.ApuDaily.user.service.UserUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -22,8 +23,8 @@ public class JwtTokenProvider {
     @Autowired
     UserUtil userUtil;
 
-    public String generateToken(Authentication authentication){
-        String username = authentication.getName();
+    public String generateToken(User user){
+        String username = user.getUsername();
         Date currentDate = new Date();
         Date expirationDate =
                 new Date(currentDate.getTime() + securityProps.Jwt().expirationMilliseconds());
