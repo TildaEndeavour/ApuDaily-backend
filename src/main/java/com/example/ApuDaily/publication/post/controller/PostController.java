@@ -37,4 +37,10 @@ public class PostController {
         Post post = postService.createPost(requestDto);
         return ResponseEntity.ok(modelMapper.map(post, PostResponseDto.class));
     }
+
+    @GetMapping("/{post_id}")
+    public ResponseEntity<PostResponseDto> getPostById(@PathVariable("post_id") long post_id){
+        Post post = postService.getPostById(post_id);
+        return ResponseEntity.ok(modelMapper.map(post, PostResponseDto.class));
+    }
 }

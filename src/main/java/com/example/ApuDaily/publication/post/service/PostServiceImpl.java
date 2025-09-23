@@ -12,6 +12,7 @@ import com.example.ApuDaily.publication.tag.repository.TagRepository;
 import com.example.ApuDaily.security.HtmlSanitizerUtil;
 import com.example.ApuDaily.user.model.User;
 import com.example.ApuDaily.user.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,6 +43,12 @@ public class PostServiceImpl implements PostService{
     @Override
     public Page<Post> getPosts(int currentPageNumber, int pageSize){
         return postRepository.findAll(PageRequest.of(currentPageNumber, pageSize));
+    }
+
+    @Override
+    public Post getPostById(long id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Post with id " + id + " not found"));
     }
 
     @Override

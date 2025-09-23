@@ -11,5 +11,7 @@ public interface PostService {
         int pageSize
     );
 
+    Post getPostById(long id);
+
     Post createPost(PostCreateRequestDto requestDto);
 }

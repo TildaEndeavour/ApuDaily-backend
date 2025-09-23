@@ -28,7 +28,7 @@ public class ApiUrl {
     @Value("/uploads/**")
     private String mediaUrl;
 
-    @Value("${api.basePath}/${api.version}/posts")
+    @Value("${api.basePath}/${api.version}/posts/*")
     private String postsUrl;
 
     @Value("${api.basePath}/${api.version}/categories")
