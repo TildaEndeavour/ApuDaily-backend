@@ -7,6 +7,7 @@ import com.example.ApuDaily.publication.category.repository.CategoryRepository;
 import com.example.ApuDaily.publication.media.model.Media;
 import com.example.ApuDaily.publication.media.repository.MediaRepository;
 import com.example.ApuDaily.publication.post.dto.PostCreateRequestDto;
+import com.example.ApuDaily.publication.post.dto.PostDeleteRequestDto;
 import com.example.ApuDaily.publication.post.dto.PostUpdateRequestDto;
 import com.example.ApuDaily.publication.post.model.Post;
 import com.example.ApuDaily.publication.post.repository.PostRepository;
@@ -50,11 +51,13 @@ public class PostServiceImpl implements PostService{
     TagRepository tagRepository;
 
     @Override
+    @Transactional
     public Page<Post> getPosts(int currentPageNumber, int pageSize){
         return postRepository.findAll(PageRequest.of(currentPageNumber, pageSize));
     }
 
     @Override
+    @Transactional
     public Post getPostById(long id) {
         return postRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Post with id " + id + " not found"));
@@ -128,5 +131,19 @@ public class PostServiceImpl implements PostService{
         post.setUpdatedAt(LocalDateTime.now());
 
         return post;
+    }
+
+    @Override
+    @Transactional
+    public void deletePost(PostDeleteRequestDto requestDto){
+        Long authenticatedUserId = authUtil.getUserIdFromAuthentication(
+                SecurityContextHolder.getContext().getAuthentication());
+
+        Post post = postRepository.findById(requestDto.getPostId())
+                .orElseThrow(() -> new ApiException(ErrorMessage.POST_NOT_FOUND, requestDto.getPostId(), HttpStatus.NOT_FOUND));
+
+        if(!authenticatedUserId.equals(requestDto.getUserId())) throw new ApiException(ErrorMessage.USER_POST_MISMATCH, requestDto.getPostId(), HttpStatus.BAD_REQUEST);
+
+        postRepository.delete(post);
     }
 }

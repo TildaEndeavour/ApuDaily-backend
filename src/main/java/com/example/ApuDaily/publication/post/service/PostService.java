@@ -1,6 +1,7 @@
 package com.example.ApuDaily.publication.post.service;
 
 import com.example.ApuDaily.publication.post.dto.PostCreateRequestDto;
+import com.example.ApuDaily.publication.post.dto.PostDeleteRequestDto;
 import com.example.ApuDaily.publication.post.dto.PostResponseDto;
 import com.example.ApuDaily.publication.post.dto.PostUpdateRequestDto;
 import com.example.ApuDaily.publication.post.model.Post;
@@ -13,8 +14,7 @@ public interface PostService {
     );
 
     Post getPostById(long id);
-
     Post createPost(PostCreateRequestDto requestDto);
-
     Post updatePost(PostUpdateRequestDto requestDto);
+    void deletePost(PostDeleteRequestDto requestDto);
 }

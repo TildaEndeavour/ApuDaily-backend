@@ -1,6 +1,7 @@
 package com.example.ApuDaily.publication.post.controller;
 
 import com.example.ApuDaily.publication.post.dto.PostCreateRequestDto;
+import com.example.ApuDaily.publication.post.dto.PostDeleteRequestDto;
 import com.example.ApuDaily.publication.post.dto.PostResponseDto;
 import com.example.ApuDaily.publication.post.dto.PostUpdateRequestDto;
 import com.example.ApuDaily.publication.post.model.Post;
@@ -9,6 +10,7 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -51,5 +53,11 @@ public class PostController {
     public ResponseEntity<PostResponseDto> getPostById(@PathVariable("post_id") long post_id){
         Post post = postService.getPostById(post_id);
         return ResponseEntity.ok(modelMapper.map(post, PostResponseDto.class));
+    }
+
+    @DeleteMapping("/{post_id}")
+    public ResponseEntity<?> deletePostById(@Valid @RequestBody PostDeleteRequestDto requestDto){
+        postService.deletePost(requestDto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
