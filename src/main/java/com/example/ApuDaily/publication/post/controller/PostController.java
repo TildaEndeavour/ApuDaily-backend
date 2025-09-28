@@ -1,18 +1,23 @@
 package com.example.ApuDaily.publication.post.controller;
 
 import com.example.ApuDaily.publication.post.dto.PostCreateRequestDto;
+import com.example.ApuDaily.publication.post.dto.PostDeleteRequestDto;
 import com.example.ApuDaily.publication.post.dto.PostResponseDto;
+import com.example.ApuDaily.publication.post.dto.PostUpdateRequestDto;
 import com.example.ApuDaily.publication.post.model.Post;
 import com.example.ApuDaily.publication.post.service.PostService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("${api.basePath}/${api.version}/posts")
 public class PostController {
 
@@ -31,9 +36,28 @@ public class PostController {
         return ResponseEntity.ok(postPage.map(post -> modelMapper.map(post, PostResponseDto.class)));
     }
 
-    @PostMapping(consumes = {"multipart/form-data"})
-    public ResponseEntity<PostResponseDto> createPost(@Valid @ModelAttribute PostCreateRequestDto requestDto){
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PostResponseDto> createPost(@Valid @RequestBody PostCreateRequestDto requestDto){
         Post post = postService.createPost(requestDto);
         return ResponseEntity.ok(modelMapper.map(post, PostResponseDto.class));
+    }
+
+    @PatchMapping("/{post_id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<PostResponseDto> updatePost(@Valid @RequestBody PostUpdateRequestDto requestDto){
+        Post post = postService.updatePost(requestDto);
+        return ResponseEntity.ok(modelMapper.map(post, PostResponseDto.class));
+    }
+
+    @GetMapping("/{post_id}")
+    public ResponseEntity<PostResponseDto> getPostById(@PathVariable("post_id") long post_id){
+        Post post = postService.getPostById(post_id);
+        return ResponseEntity.ok(modelMapper.map(post, PostResponseDto.class));
+    }
+
+    @DeleteMapping("/{post_id}")
+    public ResponseEntity<?> deletePostById(@Valid @RequestBody PostDeleteRequestDto requestDto){
+        postService.deletePost(requestDto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

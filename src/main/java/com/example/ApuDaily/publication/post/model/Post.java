@@ -27,7 +27,7 @@ public class Post {
     @Column(name = "id", unique = true, nullable = false)
     private Long Id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 

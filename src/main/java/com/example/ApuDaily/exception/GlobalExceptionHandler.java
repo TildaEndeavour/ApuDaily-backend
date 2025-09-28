@@ -43,6 +43,21 @@ public class GlobalExceptionHandler{
         return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<ExceptionDto> handleApiException(
+            ApiException ex, WebRequest request
+    ){
+        ExceptionDto exceptionDto = ExceptionDto.builder()
+                .status(ex.getHttpStatus().value())
+                .error(ex.getHttpStatus().getReasonPhrase())
+                .message(ex.getMessage())
+                .path(getRequestPath(request))
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return new ResponseEntity<>(exceptionDto, ex.getHttpStatus());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionDto> handleGenericException(
             Exception ex, WebRequest request
