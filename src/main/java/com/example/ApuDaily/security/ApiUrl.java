@@ -34,6 +34,9 @@ public class ApiUrl {
     @Value("${api.basePath}/${api.version}/posts")
     private String postsUrl;
 
+    @Value("${api.basePath}/${api.version}/posts/search")
+    private String postsSearchUrl;
+
     @Value("${api.basePath}/${api.version}/posts/*")
     private String postDetailsUrl;
 

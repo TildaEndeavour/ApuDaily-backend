@@ -60,6 +60,8 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, apiUrl.getPostDetailsUrl())
                         .permitAll()
+                        .requestMatchers(HttpMethod.POST, apiUrl.getPostsSearchUrl())
+                        .permitAll()
                         .requestMatchers(HttpMethod.GET, apiUrl.getCategoriesUrl())
                         .permitAll()
                         .requestMatchers(HttpMethod.POST, apiUrl.getTagsUrl())

@@ -8,9 +8,11 @@ import com.example.ApuDaily.publication.media.model.Media;
 import com.example.ApuDaily.publication.media.repository.MediaRepository;
 import com.example.ApuDaily.publication.post.dto.PostCreateRequestDto;
 import com.example.ApuDaily.publication.post.dto.PostDeleteRequestDto;
+import com.example.ApuDaily.publication.post.dto.PostSearchRequestDto;
 import com.example.ApuDaily.publication.post.dto.PostUpdateRequestDto;
 import com.example.ApuDaily.publication.post.model.Post;
 import com.example.ApuDaily.publication.post.repository.PostRepository;
+import com.example.ApuDaily.publication.post.specification.PostSpecification;
 import com.example.ApuDaily.publication.tag.model.Tag;
 import com.example.ApuDaily.publication.tag.repository.TagRepository;
 import com.example.ApuDaily.security.HtmlSanitizerUtil;
@@ -22,6 +24,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -52,8 +55,18 @@ public class PostServiceImpl implements PostService{
 
     @Override
     @Transactional
-    public Page<Post> getPosts(int currentPageNumber, int pageSize){
-        return postRepository.findAll(PageRequest.of(currentPageNumber, pageSize));
+    public Page<Post> getPosts(int currentPageNumber, int pageSize, PostSearchRequestDto filter) {
+        Specification<Post> spec = null;
+
+        if (filter != null &&
+                (filter.getSearchQuery() != null && !filter.getSearchQuery().isBlank() ||
+                        filter.getUsersId() != null && !filter.getUsersId().isEmpty() ||
+                        filter.getTagsId() != null && !filter.getTagsId().isEmpty() ||
+                        filter.getCategoryId() != null)) {
+            spec = PostSpecification.withFilters(filter);
+        }
+
+        return postRepository.findAll(spec, PageRequest.of(currentPageNumber, pageSize));
     }
 
     @Override
