@@ -1,6 +1,7 @@
 package com.example.ApuDaily.user.controller;
 
 import com.example.ApuDaily.user.dto.SignupRequestDto;
+import com.example.ApuDaily.user.dto.UserProfileResponseDto;
 import com.example.ApuDaily.user.dto.UserResponseDto;
 import com.example.ApuDaily.user.service.AuthUtil;
 import com.example.ApuDaily.user.service.UserService;
@@ -12,6 +13,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Validated
 @RestController
@@ -29,12 +32,18 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping
+    @GetMapping("/me")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<UserResponseDto> getUserDetails() {
         Long authUserId = authUtil.getUserIdFromAuthentication(
                 SecurityContextHolder.getContext().getAuthentication());
         UserResponseDto responseDto = userService.getUserDetailsById(authUserId);
         return ResponseEntity.ok(responseDto);
+    }
+
+    @GetMapping("/profiles")
+    public ResponseEntity<List<UserProfileResponseDto>> getAllUsersProfiles() {
+        List<UserProfileResponseDto> profiles = userService.getAllUserProfiles();
+        return ResponseEntity.ok(profiles);
     }
 }

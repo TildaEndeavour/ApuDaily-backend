@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface TagService {
     List<TagResponseDto> createTags(List<String> name);
+    List<TagResponseDto> getAllTags();
 }
