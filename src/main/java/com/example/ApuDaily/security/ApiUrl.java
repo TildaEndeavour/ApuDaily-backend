@@ -22,6 +22,9 @@ public class ApiUrl {
     @Value("${api.basePath}/${api.version}/users")
     private String signupUrl;
 
+    @Value("${api.basePath}/${api.version}/users/profiles")
+    private String usersProfileUrl;
+
     @Value("${api.basePath}/${api.version}/upload")
     private String uploadUrl;
 
@@ -30,6 +33,9 @@ public class ApiUrl {
 
     @Value("${api.basePath}/${api.version}/posts")
     private String postsUrl;
+
+    @Value("${api.basePath}/${api.version}/posts/search")
+    private String postsSearchUrl;
 
     @Value("${api.basePath}/${api.version}/posts/*")
     private String postDetailsUrl;

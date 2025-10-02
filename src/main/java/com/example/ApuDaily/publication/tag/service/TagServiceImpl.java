@@ -26,4 +26,11 @@ public class TagServiceImpl implements TagService{
                 .map(tag -> modelMapper.map(tag, TagResponseDto.class))
                 .toList();
     }
+
+    @Override
+    public List<TagResponseDto> getAllTags() {
+        return tagRepository.findAll().stream()
+                .map(tag -> modelMapper.map(tag, TagResponseDto.class))
+                .toList();
+    }
 }

@@ -1,9 +1,6 @@
 package com.example.ApuDaily.publication.post.controller;
 
-import com.example.ApuDaily.publication.post.dto.PostCreateRequestDto;
-import com.example.ApuDaily.publication.post.dto.PostDeleteRequestDto;
-import com.example.ApuDaily.publication.post.dto.PostResponseDto;
-import com.example.ApuDaily.publication.post.dto.PostUpdateRequestDto;
+import com.example.ApuDaily.publication.post.dto.*;
 import com.example.ApuDaily.publication.post.model.Post;
 import com.example.ApuDaily.publication.post.service.PostService;
 import jakarta.validation.Valid;
@@ -27,12 +24,13 @@ public class PostController {
     @Autowired
     ModelMapper modelMapper;
 
-    @GetMapping
-    public ResponseEntity<Page<PostResponseDto>> getPostsWithFilters(
-        @RequestParam(required = false, defaultValue = "10") int pageSize,
-        @RequestParam(required = false, defaultValue = "0") int pageNumber
-    ){
-        Page<Post> postPage = postService.getPosts(pageNumber,pageSize);
+    @PostMapping("/search")
+    public ResponseEntity<Page<PostResponseDto>> searchPosts(
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @Valid @RequestBody PostSearchRequestDto filter
+    ) {
+        Page<Post> postPage = postService.getPosts(pageNumber, pageSize, filter);
         return ResponseEntity.ok(postPage.map(post -> modelMapper.map(post, PostResponseDto.class)));
     }
 

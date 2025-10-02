@@ -46,6 +46,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, apiUrl.getAuthUrl())
                         .permitAll()
+                        .requestMatchers(HttpMethod.GET, apiUrl.getUsersProfileUrl())
+                        .permitAll()
                         .requestMatchers(HttpMethod.POST, apiUrl.getSignupUrl())
                         .permitAll()
                         .requestMatchers(HttpMethod.POST, apiUrl.getUploadUrl())
@@ -58,9 +60,13 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, apiUrl.getPostDetailsUrl())
                         .permitAll()
+                        .requestMatchers(HttpMethod.POST, apiUrl.getPostsSearchUrl())
+                        .permitAll()
                         .requestMatchers(HttpMethod.GET, apiUrl.getCategoriesUrl())
                         .permitAll()
                         .requestMatchers(HttpMethod.POST, apiUrl.getTagsUrl())
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, apiUrl.getTagsUrl())
                         .permitAll()
                         .anyRequest()
                         .authenticated());
