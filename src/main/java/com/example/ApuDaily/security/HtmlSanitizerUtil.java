@@ -13,6 +13,9 @@ public class HtmlSanitizerUtil {
             .allowElements("strong", "em", "u", "span")
             // Allow lists
             .allowElements("ul", "ol", "li")
+            // Allow images
+            .allowElements("img")
+            .allowAttributes("src").onElements("img")
             // Allow links
             .allowElements("a")
             .allowAttributes("href", "title").onElements("a")
