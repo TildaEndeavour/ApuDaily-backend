@@ -1,6 +1,7 @@
 package com.example.ApuDaily.publication.post.model;
 
 import com.example.ApuDaily.publication.category.model.Category;
+import com.example.ApuDaily.publication.comment.model.Comment;
 import com.example.ApuDaily.publication.media.model.Media;
 import com.example.ApuDaily.publication.tag.model.Tag;
 import com.example.ApuDaily.user.model.User;
@@ -55,10 +56,8 @@ public class Post {
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
     private List<Tag> tags;
 
-    /*
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments;
-     */
 
     @Column(name = "view_count", nullable = false, unique = false)
     private int viewCount;

@@ -176,4 +176,27 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="posts_commentaries_init" author="TildaEndeavour">
+        <createTable tableName="posts_commentaries">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="post_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_post_id" references="post(id)"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_user_id" references="user(id)"/>
+            </column>
+            <column name="content" type="varchar">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="created_at" type="datetime">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="updated_at" type="datetime">
+                <constraints nullable="false" unique="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
 </databaseChangeLog>
