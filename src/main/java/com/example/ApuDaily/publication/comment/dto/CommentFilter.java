@@ -7,12 +7,9 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentCreateRequestDto {
+public class CommentFilter {
     private Long postId;
-
-    private Long parentCommentId;
-
     private Long userId;
-
-    private String content;
+    private Long parentCommentId;
+    private Long commentId;
 }
