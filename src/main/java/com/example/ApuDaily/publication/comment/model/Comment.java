@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "comments")
+@Table(name = "posts_commentaries")
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -12,7 +12,5 @@ public class CommentCreateRequestDto {
 
     private Long parentCommentId;
 
-    private Long userId;
-
     private String content;
 }

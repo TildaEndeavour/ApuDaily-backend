@@ -38,14 +38,14 @@ public class CommentController {
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<CommentResponseDto> createComment(CommentCreateRequestDto requestDto){
+    public ResponseEntity<CommentResponseDto> createComment(@Valid @RequestBody CommentCreateRequestDto requestDto){
         Comment comment = commentService.createComment(requestDto);
         return ResponseEntity.ok(modelMapper.map(comment, CommentResponseDto.class));
     }
 
     @PatchMapping("/{comment_id}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<CommentResponseDto> updateComment(CommentUpdateRequestDto requestDto){
+    public ResponseEntity<CommentResponseDto> updateComment(@Valid @RequestBody CommentUpdateRequestDto requestDto){
         Comment comment = commentService.updateComment(requestDto);
         return ResponseEntity.ok(modelMapper.map(comment, CommentResponseDto.class));
     }

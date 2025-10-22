@@ -61,14 +61,19 @@ public class CommentServiceImpl implements CommentService{
     @Transactional
     public Comment createComment(CommentCreateRequestDto requestDto){
 
-        User user = userRepository.findById(requestDto.getUserId())
-                .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND, requestDto.getUserId(), HttpStatus.BAD_REQUEST));
+        User user = authUtil.getUserFromAuthentication(
+                SecurityContextHolder.getContext().getAuthentication());
 
         Post post = postRepository.findById(requestDto.getPostId())
                 .orElseThrow(() -> new ApiException(ErrorMessage.POST_NOT_FOUND, requestDto.getPostId(), HttpStatus.BAD_REQUEST));
 
-        Comment parentComment = commentRepository.findById(requestDto.getParentCommentId())
-                .orElseThrow(() -> new ApiException(ErrorMessage.COMMENT_NOT_FOUND, requestDto.getParentCommentId(), HttpStatus.BAD_REQUEST));
+        Comment parentComment = Optional.ofNullable(requestDto.getParentCommentId())
+                .map(id -> commentRepository.findById(id)
+                        .orElseThrow(() -> new ApiException(
+                                ErrorMessage.COMMENT_NOT_FOUND,
+                                id,
+                                HttpStatus.BAD_REQUEST)))
+                .orElse(null);
 
         return commentRepository.save(Comment.builder()
                 .user(user)
