@@ -22,7 +22,7 @@ public class ApiUrl {
     @Value("${api.basePath}/${api.version}/users")
     private String signupUrl;
 
-    @Value("${api.basePath}/${api.version}/users/profiles")
+    @Value("${api.basePath}/${api.version}/users/profiles/*")
     private String usersProfileUrl;
 
     @Value("${api.basePath}/${api.version}/upload")

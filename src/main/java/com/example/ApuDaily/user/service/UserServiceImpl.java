@@ -65,11 +65,18 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserResponseDto getUserDetailsById(long userId) {
-        UserResponseDto responseDto = userRepository
+        return userRepository
                 .findById(userId)
                 .map(user -> modelMapper.map(user, UserResponseDto.class))
                 .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND, userId, HttpStatus.NOT_FOUND));
-        return responseDto;
+    }
+
+    @Override
+    public UserProfileResponseDto getUserProfileById(long userId){
+        return userRepository
+                .findById(userId)
+                .map(user -> modelMapper.map(user, UserProfileResponseDto.class))
+                .orElseThrow(() -> new ApiException(ErrorMessage.USER_NOT_FOUND, userId, HttpStatus.NOT_FOUND));
     }
 
     @Override
