@@ -182,11 +182,12 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="post_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_post_id" references="post(id)"/>
+                <constraints nullable="false" foreignKeyName="fk_post_id" references="posts(id)"/>
             </column>
             <column name="user_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_user_id" references="user(id)"/>
+                <constraints nullable="false" foreignKeyName="fk_user_id" references="users(id)"/>
             </column>
+            <column name="parent_comment_id" type="bigint"/>
             <column name="content" type="varchar">
                 <constraints nullable="false" unique="false"/>
             </column>
@@ -197,6 +198,16 @@
                 <constraints nullable="false" unique="false"/>
             </column>
         </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="posts_commentaries"
+                baseColumnNames="parent_comment_id"
+                referencedTableName="posts_commentaries"
+                referencedColumnNames="id"
+                constraintName="fk_parent_comment_id"
+                deferrable="false"
+                initiallyDeferred="false"
+                onDelete="SET NULL"/>
     </changeSet>
 
 </databaseChangeLog>

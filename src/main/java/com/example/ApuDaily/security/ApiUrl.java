@@ -40,6 +40,9 @@ public class ApiUrl {
     @Value("${api.basePath}/${api.version}/posts/*")
     private String postDetailsUrl;
 
+    @Value("${api.basePath}/${api.version}/commentaries/search")
+    private String commentariesSearchUrl;
+
     @Value("${api.basePath}/${api.version}/categories")
     private String categoriesUrl;
 
