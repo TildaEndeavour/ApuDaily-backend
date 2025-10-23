@@ -1,11 +1,9 @@
 package com.example.ApuDaily.publication.post.dto;
 
 import com.example.ApuDaily.publication.category.dto.CategoryResponseDto;
-import com.example.ApuDaily.publication.category.model.Category;
 import com.example.ApuDaily.publication.media.dto.MediaResponseDto;
 import com.example.ApuDaily.publication.tag.dto.TagResponseDto;
-import com.example.ApuDaily.publication.tag.model.Tag;
-import com.example.ApuDaily.user.dto.UserResponseDto;
+import com.example.ApuDaily.user.dto.UserProfileResponseDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
@@ -21,7 +19,7 @@ import java.util.Map;
 public class PostResponseDto {
     private Long id;
 
-    private UserResponseDto user;
+    private UserProfileResponseDto user;
 
     private MediaResponseDto thumbnail;
 

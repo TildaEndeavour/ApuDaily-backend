@@ -32,8 +32,8 @@ public class CommentController {
             @RequestParam(defaultValue = "0") int pageNumber,
             @Valid @RequestBody CommentFilter filter)
     {
-        Page<Comment> commentsPage = commentService.getCommentsByFilter(pageNumber, pageSize, filter);
-        return ResponseEntity.ok(commentsPage.map(comment -> modelMapper.map(comment, CommentResponseDto.class)));
+        Page<CommentResponseDto> response = commentService.getCommentsByFilter(pageNumber, pageSize, filter);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping

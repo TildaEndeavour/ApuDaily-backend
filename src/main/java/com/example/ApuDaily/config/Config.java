@@ -17,10 +17,7 @@ public class Config {
 
         TypeMap<Comment, CommentResponseDto> typeMap = modelMapper.createTypeMap(Comment.class, CommentResponseDto.class);
         typeMap.addMappings(mapper -> {
-            mapper.map(src -> src.getUser().getId(), CommentResponseDto::setUserId);
             mapper.map(src -> src.getPost().getId(), CommentResponseDto::setPostId);
-            mapper.map(src -> src.getParentComment() != null ? src.getParentComment().getId() : null,
-                    CommentResponseDto::setParentCommentId);
         });
 
         return modelMapper;

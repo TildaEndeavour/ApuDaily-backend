@@ -2,10 +2,7 @@ package com.example.ApuDaily.publication.comment.service;
 
 import com.example.ApuDaily.exception.ApiException;
 import com.example.ApuDaily.exception.ErrorMessage;
-import com.example.ApuDaily.publication.comment.dto.CommentCreateRequestDto;
-import com.example.ApuDaily.publication.comment.dto.CommentDeleteRequestDto;
-import com.example.ApuDaily.publication.comment.dto.CommentFilter;
-import com.example.ApuDaily.publication.comment.dto.CommentUpdateRequestDto;
+import com.example.ApuDaily.publication.comment.dto.*;
 import com.example.ApuDaily.publication.comment.model.Comment;
 import com.example.ApuDaily.publication.comment.repository.CommentRepository;
 import com.example.ApuDaily.publication.comment.specification.CommentSpecification;
@@ -15,6 +12,7 @@ import com.example.ApuDaily.user.model.User;
 import com.example.ApuDaily.user.repository.UserRepository;
 import com.example.ApuDaily.user.service.AuthUtil;
 import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -33,7 +31,7 @@ public class CommentServiceImpl implements CommentService{
     CommentRepository commentRepository;
 
     @Autowired
-    UserRepository userRepository;
+    ModelMapper modelMapper;
 
     @Autowired
     AuthUtil authUtil;
@@ -43,7 +41,7 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     @Transactional
-    public Page<Comment> getCommentsByFilter(int currentPageNumber, int pageSize, CommentFilter filter){
+    public Page<CommentResponseDto> getCommentsByFilter(int currentPageNumber, int pageSize, CommentFilter filter){
         Specification<Comment> spec = null;
 
         if(filter != null && (filter.getPostId() != null ||
@@ -54,7 +52,8 @@ public class CommentServiceImpl implements CommentService{
             spec = CommentSpecification.withFilters(filter);
         }
 
-        return commentRepository.findAll(spec, PageRequest.of(currentPageNumber, pageSize));
+        Page<Comment> commentsPage = commentRepository.findAll(spec, PageRequest.of(currentPageNumber, pageSize));
+        return commentsPage.map(comment -> modelMapper.map(comment, CommentResponseDto.class));
     }
 
     @Override

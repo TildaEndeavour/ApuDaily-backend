@@ -23,6 +23,8 @@ public class CommentSpecification {
 
             if(filter.getParentCommentId() != null){
                 predicates.add(cb.equal(root.get("parentComment").get("id"), filter.getParentCommentId()));
+            } else {
+                predicates.add(cb.isNull(root.get("parentComment")));
             }
 
             if(filter.getCommentId() != null){
