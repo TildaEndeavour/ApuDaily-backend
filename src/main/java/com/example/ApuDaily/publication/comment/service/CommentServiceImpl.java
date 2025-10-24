@@ -113,7 +113,7 @@ public class CommentServiceImpl implements CommentService{
         Comment comment = commentRepository.findById(requestDto.getCommentId())
                 .orElseThrow(() -> new ApiException(ErrorMessage.COMMENT_NOT_FOUND, requestDto.getCommentId(), HttpStatus.BAD_REQUEST));
 
-        if(!authenticatedUserId.equals(requestDto.getUserId())) throw new ApiException(ErrorMessage.USER_POST_MISMATCH, requestDto.getCommentId(), HttpStatus.BAD_REQUEST);
+        if(!authenticatedUserId.equals(comment.getUser().getId())) throw new ApiException(ErrorMessage.USER_POST_MISMATCH, requestDto.getCommentId(), HttpStatus.BAD_REQUEST);
 
         commentRepository.delete(comment);
     }
