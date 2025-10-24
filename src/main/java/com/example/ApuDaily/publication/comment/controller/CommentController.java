@@ -39,8 +39,8 @@ public class CommentController {
     @PostMapping
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<CommentResponseDto> createComment(@Valid @RequestBody CommentCreateRequestDto requestDto){
-        Comment comment = commentService.createComment(requestDto);
-        return ResponseEntity.ok(modelMapper.map(comment, CommentResponseDto.class));
+        CommentResponseDto result = commentService.createComment(requestDto);
+        return ResponseEntity.ok(modelMapper.map(result, CommentResponseDto.class));
     }
 
     @PatchMapping("/{comment_id}")

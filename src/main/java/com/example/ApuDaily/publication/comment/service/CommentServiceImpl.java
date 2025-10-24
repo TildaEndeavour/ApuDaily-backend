@@ -58,7 +58,7 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     @Transactional
-    public Comment createComment(CommentCreateRequestDto requestDto){
+    public CommentResponseDto createComment(CommentCreateRequestDto requestDto){
 
         User user = authUtil.getUserFromAuthentication(
                 SecurityContextHolder.getContext().getAuthentication());
@@ -74,7 +74,7 @@ public class CommentServiceImpl implements CommentService{
                                 HttpStatus.BAD_REQUEST)))
                 .orElse(null);
 
-        return commentRepository.save(Comment.builder()
+        Comment result = commentRepository.save(Comment.builder()
                 .user(user)
                 .post(post)
                 .content(requestDto.getContent())
@@ -82,6 +82,8 @@ public class CommentServiceImpl implements CommentService{
                 .updatedAt(LocalDateTime.now())
                 .parentComment(parentComment)
                 .build());
+
+        return modelMapper.map(result, CommentResponseDto.class);
     }
 
     @Override

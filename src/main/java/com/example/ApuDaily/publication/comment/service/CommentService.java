@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface CommentService {
     Page<CommentResponseDto> getCommentsByFilter(int currentPageNumber, int pageSize, CommentFilter filter);
-    Comment createComment(CommentCreateRequestDto requestDto);
+    CommentResponseDto createComment(CommentCreateRequestDto requestDto);
     Comment updateComment(CommentUpdateRequestDto requestDto);
     void deleteComment(CommentDeleteRequestDto requestDto);
 }
