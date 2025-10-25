@@ -20,8 +20,7 @@ public class CommentResponseDto {
 
     private Long postId;
 
-    @JsonIgnore
-    private CommentResponseDto parentComment;
+    private Long parentCommentId;
 
     private String content;
 
