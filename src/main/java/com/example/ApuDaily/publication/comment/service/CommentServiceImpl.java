@@ -88,20 +88,20 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     @Transactional
-    public Comment updateComment(CommentUpdateRequestDto requestDto){
+    public CommentResponseDto updateComment(CommentUpdateRequestDto requestDto){
 
         Long userId = authUtil.getUserIdFromAuthentication(
                 SecurityContextHolder.getContext().getAuthentication());
 
-        if(!userId.equals(requestDto.getUserId())) throw new ApiException(ErrorMessage.USER_COMMENT_MISMATCH, requestDto.getCommentId(), HttpStatus.BAD_REQUEST);
-
         Comment comment = commentRepository.findById(requestDto.getCommentId())
                 .orElseThrow(() -> new ApiException(ErrorMessage.COMMENT_NOT_FOUND, requestDto.getCommentId(), HttpStatus.BAD_REQUEST));
+
+        if(!userId.equals(comment.getUser().getId())) throw new ApiException(ErrorMessage.USER_COMMENT_MISMATCH, requestDto.getCommentId(), HttpStatus.BAD_REQUEST);
 
         comment.setContent(requestDto.getContent());
         comment.setUpdatedAt(LocalDateTime.now());
 
-        return comment;
+        return modelMapper.map(comment, CommentResponseDto.class);
     }
 
     @Override

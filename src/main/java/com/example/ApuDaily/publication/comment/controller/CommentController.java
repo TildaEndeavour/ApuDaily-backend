@@ -46,8 +46,8 @@ public class CommentController {
     @PatchMapping("/{comment_id}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<CommentResponseDto> updateComment(@Valid @RequestBody CommentUpdateRequestDto requestDto){
-        Comment comment = commentService.updateComment(requestDto);
-        return ResponseEntity.ok(modelMapper.map(comment, CommentResponseDto.class));
+        CommentResponseDto result = commentService.updateComment(requestDto);
+        return ResponseEntity.ok(result);
     }
 
     @DeleteMapping("/{comment_id}")

@@ -9,6 +9,5 @@ import lombok.*;
 @AllArgsConstructor
 public class CommentUpdateRequestDto {
     Long commentId;
-    Long userId;
     String content;
 }
