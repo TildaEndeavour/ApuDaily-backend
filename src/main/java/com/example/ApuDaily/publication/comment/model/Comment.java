@@ -13,30 +13,33 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "comments")
+@Table(name = "posts_commentaries")
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "content", unique = false, nullable = false)
-    private String content;
-
-    @Column(name = "created_at", unique = false, nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at", unique = false, nullable = false)
-    private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_comment_id")
+    private Comment parentComment;
+
+    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> replies;
+
+    @Column(name = "content", unique = false, nullable = false)
+    private String content;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_comment_id")
-    private Comment parentComment;
+    @Column(name = "created_at", unique = false, nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at", unique = false, nullable = false)
+    private LocalDateTime updatedAt;
 }

@@ -9,5 +9,6 @@ import java.util.List;
 public interface UserService {
     void createUser(SignupRequestDto requestDto);
     UserResponseDto getUserDetailsById(long userId);
+    UserProfileResponseDto getUserProfileById(long userId);
     List<UserProfileResponseDto> getAllUserProfiles();
 }

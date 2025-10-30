@@ -1,39 +1,30 @@
-package com.example.ApuDaily.publication.post.dto;
+package com.example.ApuDaily.publication.comment.dto;
 
-import com.example.ApuDaily.publication.category.dto.CategoryResponseDto;
-import com.example.ApuDaily.publication.media.dto.MediaResponseDto;
-import com.example.ApuDaily.publication.tag.dto.TagResponseDto;
 import com.example.ApuDaily.user.dto.UserProfileResponseDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostResponseDto {
+public class CommentResponseDto {
     private Long id;
 
     private UserProfileResponseDto user;
 
-    private MediaResponseDto thumbnail;
+    private Long postId;
 
-    private String title;
-
-    private String description;
+    private Long parentCommentId;
 
     private String content;
 
-    private int viewCount;
-
-    private CategoryResponseDto category;
-
-    private List<TagResponseDto> tags;
+    private List<CommentResponseDto> replies;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private LocalDateTime createdAt;

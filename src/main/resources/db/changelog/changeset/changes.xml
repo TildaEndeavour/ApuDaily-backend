@@ -176,4 +176,40 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="posts_commentaries_init" author="TildaEndeavour">
+        <createTable tableName="posts_commentaries">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="post_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_post_id" references="posts(id)"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_user_id" references="users(id)"/>
+            </column>
+            <column name="parent_comment_id" type="bigint">
+                <constraints nullable="true" unique="false"/>
+            </column>
+            <column name="content" type="varchar">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="created_at" type="datetime">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="updated_at" type="datetime">
+                <constraints nullable="false" unique="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="posts_commentaries"
+                baseColumnNames="parent_comment_id"
+                referencedTableName="posts_commentaries"
+                referencedColumnNames="id"
+                constraintName="fk_parent_comment_id"
+                deferrable="false"
+                initiallyDeferred="false"
+                onDelete="SET NULL"/>
+    </changeSet>
+
 </databaseChangeLog>

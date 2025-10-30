@@ -6,8 +6,10 @@ public enum ErrorMessage {
     ALREADY_EXISTS("Already exists"),
     INVALID_TOKEN("Invalid token"),
     USER_NOT_FOUND("User with id %d not found"),
-    USER_POST_MISMATCH("Post with id %d doesn't belong to the user"),
     POST_NOT_FOUND("Post with id %d not found"),
+    COMMENT_NOT_FOUND("Comment with id %d not found"),
+    USER_POST_MISMATCH("Post with id %d doesn't belong to the user"),
+    USER_COMMENT_MISMATCH("Commentary with id %d doesn't belong to user"),
     MEDIA_NOT_FOUND("Media with id %d not found"),
     CATEGORY_NOT_FOUND("Category with id %d not found"),
     NOT_FOUND("Not found");
