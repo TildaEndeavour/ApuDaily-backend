@@ -16,6 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -52,7 +53,8 @@ public class CommentServiceImpl implements CommentService{
             spec = CommentSpecification.withFilters(filter);
         }
 
-        Page<Comment> commentsPage = commentRepository.findAll(spec, PageRequest.of(currentPageNumber, pageSize));
+        Page<Comment> commentsPage = commentRepository.findAll(spec,
+                PageRequest.of(currentPageNumber, pageSize, Sort.by(Sort.Direction.ASC, "createdAt")));
         return commentsPage.map(comment -> modelMapper.map(comment, CommentResponseDto.class));
     }
 
