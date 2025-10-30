@@ -48,6 +48,8 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, apiUrl.getUsersProfileUrl())
                         .permitAll()
+                        .requestMatchers(HttpMethod.GET, apiUrl.getTimezoneUrl())
+                        .permitAll()
                         .requestMatchers(HttpMethod.POST, apiUrl.getSignupUrl())
                         .permitAll()
                         .requestMatchers(HttpMethod.POST, apiUrl.getUploadUrl())
