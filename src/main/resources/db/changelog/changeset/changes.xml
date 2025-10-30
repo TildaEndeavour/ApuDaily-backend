@@ -212,4 +212,33 @@
                 onDelete="SET NULL"/>
     </changeSet>
 
+    <changeSet id="timezones_and_user_profiles_init" author="TildaEndeavour">
+
+        <createTable tableName="timezones">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="gmt" type="varchar">
+                <constraints nullable="false" unique="false"/>
+            </column>
+        </createTable>
+
+        <sqlFile path="sql/timezones.sql" relativeToChangelogFile="true" endDelimiter=";" splitStatements="true"/>
+
+        <createTable tableName="profiles">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_user_id" references="users(id)"/>
+            </column>
+            <column name="timezone_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_timezone_id" references="timezones(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
 </databaseChangeLog>
