@@ -1,9 +1,11 @@
 package com.example.ApuDaily.user.controller;
 
 import com.example.ApuDaily.user.dto.SignupRequestDto;
+import com.example.ApuDaily.user.dto.TimezoneResponseDto;
 import com.example.ApuDaily.user.dto.UserProfileResponseDto;
 import com.example.ApuDaily.user.dto.UserResponseDto;
 import com.example.ApuDaily.user.service.AuthUtil;
+import com.example.ApuDaily.user.service.TimezoneService;
 import com.example.ApuDaily.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserService userService;
+
+    @Autowired
+    TimezoneService timezoneService;
 
     @Autowired
     AuthUtil authUtil;
@@ -51,5 +56,11 @@ public class UserController {
     public ResponseEntity<UserProfileResponseDto> getUserProfileById(@PathVariable("user_id") long userId){
         UserProfileResponseDto profile = userService.getUserProfileById(userId);
         return ResponseEntity.ok(profile);
+    }
+
+    @GetMapping("/timezones")
+    public ResponseEntity<List<TimezoneResponseDto>> getTimezones() {
+        List<TimezoneResponseDto> responseDtoList = timezoneService.getTimezones();
+        return ResponseEntity.ok(responseDtoList);
     }
 }

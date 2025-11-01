@@ -30,27 +30,27 @@ public class PostController {
             @RequestParam(defaultValue = "0") int pageNumber,
             @Valid @RequestBody PostSearchRequestDto filter
     ) {
-        Page<Post> postPage = postService.getPosts(pageNumber, pageSize, filter);
-        return ResponseEntity.ok(postPage.map(post -> modelMapper.map(post, PostResponseDto.class)));
+        Page<PostResponseDto> postPage = postService.getPosts(pageNumber, pageSize, filter);
+        return ResponseEntity.ok(postPage);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PostResponseDto> createPost(@Valid @RequestBody PostCreateRequestDto requestDto){
-        Post post = postService.createPost(requestDto);
-        return ResponseEntity.ok(modelMapper.map(post, PostResponseDto.class));
+        PostResponseDto result = postService.createPost(requestDto);
+        return ResponseEntity.ok(result);
     }
 
     @PatchMapping("/{post_id}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<PostResponseDto> updatePost(@Valid @RequestBody PostUpdateRequestDto requestDto){
-        Post post = postService.updatePost(requestDto);
-        return ResponseEntity.ok(modelMapper.map(post, PostResponseDto.class));
+        PostResponseDto result = postService.updatePost(requestDto);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/{post_id}")
     public ResponseEntity<PostResponseDto> getPostById(@PathVariable("post_id") long post_id){
-        Post post = postService.getPostById(post_id);
-        return ResponseEntity.ok(modelMapper.map(post, PostResponseDto.class));
+        PostResponseDto result = postService.getPostById(post_id);
+        return ResponseEntity.ok(result);
     }
 
     @DeleteMapping("/{post_id}")

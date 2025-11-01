@@ -49,7 +49,7 @@ public class Post {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "posts_tags",
             joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),

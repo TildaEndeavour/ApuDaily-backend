@@ -2,6 +2,7 @@ package com.example.ApuDaily.publication.media.service;
 
 import com.example.ApuDaily.publication.media.model.Media;
 import com.example.ApuDaily.publication.media.repository.MediaRepository;
+import com.example.ApuDaily.shared.util.DateTimeService;
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,6 +24,9 @@ public class MediaServiceImpl implements MediaService {
 
     @Autowired
     MediaRepository mediaRepository;
+
+    @Autowired
+    DateTimeService dateTimeService;
 
     private final Tika tika = new Tika();
 
@@ -62,7 +65,7 @@ public class MediaServiceImpl implements MediaService {
                 .filename(filename)
                 .extension(ext)
                 .url(resultUrl)
-                .createdAt(Timestamp.valueOf(LocalDateTime.now()))
+                .createdAt(Timestamp.valueOf(dateTimeService.getCurrentDatabaseZonedDateTime().toLocalDateTime()))
                 .build());
     }
 
