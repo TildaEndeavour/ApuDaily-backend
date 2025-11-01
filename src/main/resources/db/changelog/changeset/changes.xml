@@ -229,7 +229,7 @@
             </column>
         </createTable>
 
-        <sqlFile path="sql/timezones.sql" relativeToChangelogFile="true" endDelimiter=";" splitStatements="true"/>
+        <sqlFile path="sql/timezones_init.sql" relativeToChangelogFile="true" endDelimiter=";" splitStatements="true"/>
 
         <createTable tableName="profiles">
             <column name="id" type="bigint" autoIncrement="true">
@@ -239,7 +239,53 @@
                 <constraints nullable="false" foreignKeyName="fk_user_id" references="users(id)"/>
             </column>
             <column name="timezone_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_timezone_id" references="timezones(id)"/>
+                <constraints nullable="false" unique="false" foreignKeyName="fk_timezone_id" references="timezones(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="reactions_init" author="TildaEndeavour">
+
+        <createTable tableName="target_types">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+
+        <sqlFile path="sql/target_types_init.sql" relativeToChangelogFile="true" endDelimiter=";" splitStatements="true"/>
+
+        <createTable tableName="reaction_types">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+
+        <sqlFile path="sql/reaction_types_init.sql" relativeToChangelogFile="true" endDelimiter=";" splitStatements="true"/>
+
+        <createTable tableName="reactions">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="target_type_id" type="bigint">
+                <constraints nullable="false" unique="false" foreignKeyName="fk_entity_type_id" references="target_types(id)"/>
+            </column>
+            <column name="entity_id" type="bigint">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="reaction_type_id" type="bigint">
+                <constraints nullable="false" unique="false" foreignKeyName="fk_reaction_type_id" references="reaction_types(id)"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_user_id" references="users(id)"/>
+            </column>
+            <column name="created_at" type="datetime">
+                <constraints nullable="false" unique="false"/>
             </column>
         </createTable>
     </changeSet>
