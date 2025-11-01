@@ -35,6 +35,9 @@
             <column name="created_at" type="datetime">
                 <constraints nullable="false" unique="false"/>
             </column>
+            <column name="updated_at" type="datetime">
+                <constraints nullable="true" unique="false"/>
+            </column>
         </createTable>
 
         <sqlFile path="sql/roles_init.sql" relativeToChangelogFile="true" endDelimiter=";" splitStatements="true"/>
@@ -111,7 +114,7 @@
                 <constraints nullable="false" unique="false"/>
             </column>
             <column name="updated_at" type="datetime">
-                <constraints nullable="false" unique="false"/>
+                <constraints nullable="true" unique="false"/>
             </column>
         </createTable>
     </changeSet>
@@ -197,7 +200,7 @@
                 <constraints nullable="false" unique="false"/>
             </column>
             <column name="updated_at" type="datetime">
-                <constraints nullable="false" unique="false"/>
+                <constraints nullable="true" unique="false"/>
             </column>
         </createTable>
 

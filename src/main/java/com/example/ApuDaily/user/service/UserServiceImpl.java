@@ -2,6 +2,7 @@ package com.example.ApuDaily.user.service;
 
 import com.example.ApuDaily.exception.ApiException;
 import com.example.ApuDaily.exception.ErrorMessage;
+import com.example.ApuDaily.shared.util.DateTimeService;
 import com.example.ApuDaily.user.dto.SignupRequestDto;
 import com.example.ApuDaily.user.dto.UserProfileResponseDto;
 import com.example.ApuDaily.user.dto.UserResponseDto;
@@ -15,8 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +35,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     ModelMapper modelMapper;
+
+    @Autowired
+    DateTimeService dateTimeService;
 
     @Override
     public void createUser(SignupRequestDto requestDto){
@@ -57,7 +59,7 @@ public class UserServiceImpl implements UserService{
                 .email(requestDto.getEmail())
                 .password(passwordEncoder.encode(requestDto.getPassword()))
                 .role(role)
-                .createdAt(LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()))
+                .createdAt(dateTimeService.getCurrentDatabaseZonedDateTime().toLocalDateTime())
                 .build();
 
         userRepository.save(user);

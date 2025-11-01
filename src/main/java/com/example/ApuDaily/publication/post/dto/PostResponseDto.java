@@ -2,6 +2,7 @@ package com.example.ApuDaily.publication.post.dto;
 
 import com.example.ApuDaily.publication.category.dto.CategoryResponseDto;
 import com.example.ApuDaily.publication.media.dto.MediaResponseDto;
+import com.example.ApuDaily.publication.post.model.Post;
 import com.example.ApuDaily.publication.tag.dto.TagResponseDto;
 import com.example.ApuDaily.user.dto.UserProfileResponseDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -9,7 +10,6 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter

@@ -8,6 +8,7 @@ import com.example.ApuDaily.publication.comment.repository.CommentRepository;
 import com.example.ApuDaily.publication.comment.specification.CommentSpecification;
 import com.example.ApuDaily.publication.post.model.Post;
 import com.example.ApuDaily.publication.post.repository.PostRepository;
+import com.example.ApuDaily.shared.util.DateTimeService;
 import com.example.ApuDaily.user.model.User;
 import com.example.ApuDaily.user.repository.UserRepository;
 import com.example.ApuDaily.user.service.AuthUtil;
@@ -36,6 +37,9 @@ public class CommentServiceImpl implements CommentService{
 
     @Autowired
     AuthUtil authUtil;
+
+    @Autowired
+    DateTimeService dateTimeService;
 
     @Autowired
     PostRepository postRepository;
@@ -80,8 +84,8 @@ public class CommentServiceImpl implements CommentService{
                 .user(user)
                 .post(post)
                 .content(requestDto.getContent())
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .createdAt(dateTimeService.getCurrentDatabaseZonedDateTime().toLocalDateTime())
+                .updatedAt(null)
                 .parentComment(parentComment)
                 .build());
 
@@ -101,7 +105,7 @@ public class CommentServiceImpl implements CommentService{
         if(!userId.equals(comment.getUser().getId())) throw new ApiException(ErrorMessage.USER_COMMENT_MISMATCH, requestDto.getCommentId(), HttpStatus.BAD_REQUEST);
 
         comment.setContent(requestDto.getContent());
-        comment.setUpdatedAt(LocalDateTime.now());
+        comment.setUpdatedAt(dateTimeService.getCurrentDatabaseZonedDateTime().toLocalDateTime());
 
         return modelMapper.map(comment, CommentResponseDto.class);
     }
