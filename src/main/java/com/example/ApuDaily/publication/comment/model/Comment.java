@@ -37,6 +37,12 @@ public class Comment {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @Column(name = "upvotes_count", nullable = false, unique = false)
+    private int upvotesCount;
+
+    @Column(name = "downvotes_count", nullable = false, unique = false)
+    private int downvotesCount;
+
     @Column(name = "created_at", unique = false, nullable = false)
     private LocalDateTime createdAt;
 

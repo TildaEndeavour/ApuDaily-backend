@@ -18,14 +18,17 @@ public class Reaction {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    private Post post;
+    @JoinColumn(name="target_type_id")
+    private TargetType targetType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "entity_id", nullable = false, unique = false)
+    private long entityId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "react_id")
     private ReactionType reactionType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

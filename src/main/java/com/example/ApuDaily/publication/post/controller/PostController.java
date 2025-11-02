@@ -21,9 +21,6 @@ public class PostController {
     @Autowired
     PostService postService;
 
-    @Autowired
-    ModelMapper modelMapper;
-
     @PostMapping("/search")
     public ResponseEntity<Page<PostResponseDto>> searchPosts(
             @RequestParam(defaultValue = "10") int pageSize,
