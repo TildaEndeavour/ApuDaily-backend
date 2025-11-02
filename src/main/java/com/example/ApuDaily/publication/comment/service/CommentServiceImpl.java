@@ -89,6 +89,8 @@ public class CommentServiceImpl implements CommentService{
                 .parentComment(parentComment)
                 .build());
 
+        postRepository.incrementCommentCount(post.getId());
+
         return modelMapper.map(result, CommentResponseDto.class);
     }
 
@@ -122,5 +124,7 @@ public class CommentServiceImpl implements CommentService{
         if(!authenticatedUserId.equals(comment.getUser().getId())) throw new ApiException(ErrorMessage.USER_POST_MISMATCH, requestDto.getCommentId(), HttpStatus.BAD_REQUEST);
 
         commentRepository.delete(comment);
+
+        postRepository.decrementCommentCount(comment.getPost().getId());
     }
 }

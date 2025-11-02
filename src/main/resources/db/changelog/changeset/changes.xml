@@ -110,6 +110,15 @@
             <column name="view_count" type="bigint">
                 <constraints nullable="false" unique="false"/>
             </column>
+            <column name="commentaries_count" type="bigint">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="upvotes_count" type="bigint">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="downvotes_count" type="bigint">
+                <constraints nullable="false" unique="false"/>
+            </column>
             <column name="created_at" type="datetime">
                 <constraints nullable="false" unique="false"/>
             </column>

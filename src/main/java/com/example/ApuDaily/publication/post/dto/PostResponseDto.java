@@ -29,6 +29,12 @@ public class PostResponseDto {
 
     private String content;
 
+    private int commentariesCount;
+
+    private int upvotesCount;
+
+    private int downvotesCount;
+
     private int viewCount;
 
     private CategoryResponseDto category;
