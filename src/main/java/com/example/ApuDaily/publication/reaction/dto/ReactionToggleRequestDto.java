@@ -7,6 +7,8 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReactionRemoveRequestDto {
-    private Long reactionId;
+public class ReactionToggleRequestDto {
+    private Long targetTypeId;
+    private Long entityId;
+    private Boolean isUpvote;
 }

@@ -1,7 +1,8 @@
 package com.example.ApuDaily.publication.reaction.controller;
 
-import com.example.ApuDaily.publication.reaction.dto.ReactionRemoveRequestDto;
-import com.example.ApuDaily.publication.reaction.dto.ReactionSetRequestDto;
+import com.example.ApuDaily.publication.reaction.dto.ReactionRequestDto;
+import com.example.ApuDaily.publication.reaction.dto.ReactionToggleRequestDto;
+import com.example.ApuDaily.publication.reaction.model.Reaction;
 import com.example.ApuDaily.publication.reaction.repository.ReactionRepository;
 import com.example.ApuDaily.publication.reaction.service.ReactionService;
 import jakarta.validation.Valid;
@@ -9,7 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,20 +21,19 @@ import org.springframework.web.bind.annotation.*;
 public class ReactionController {
 
     @Autowired
-    ReactionRepository reactionRepository;
-
-    @Autowired
     ReactionService reactionService;
 
     @PostMapping
-    public ResponseEntity<?> setReaction(@Valid @RequestBody ReactionSetRequestDto requestDto){
-        reactionService.setReaction(requestDto);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> toggleReaction(@Valid @RequestBody ReactionToggleRequestDto requestDto){
+        boolean isReactionSet = reactionService.toggleReaction(requestDto);
+        if(isReactionSet) return ResponseEntity.status(HttpStatus.OK).build(); // Reaction set
+        else return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // Reaction removed
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> removeReaction(@Valid @RequestBody ReactionRemoveRequestDto requestDto){
-        reactionService.removeReaction(requestDto);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    @GetMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<Optional<Reaction>> getReactionFromTarget(@Valid @RequestBody ReactionRequestDto requestDto){
+        return ResponseEntity.ok(reactionService.getReactionFromTarget(requestDto));
     }
 }

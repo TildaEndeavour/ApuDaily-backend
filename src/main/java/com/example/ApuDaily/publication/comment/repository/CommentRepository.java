@@ -9,22 +9,18 @@ import org.springframework.data.repository.query.Param;
 
 public interface CommentRepository extends JpaRepository<Comment, Long>, JpaSpecificationExecutor<Comment> {
     @Modifying
-    @Query("UPDATE Post p SET p.commentariesCount = p.commentariesCount - 1 WHERE p.id = :id")
-    void decrementCommentCount(@Param("id") Long id);
-
-    @Modifying
-    @Query("UPDATE Post p SET p.upvotesCount = p.upvotesCount + 1 WHERE p.id = :id")
+    @Query("UPDATE Comment c SET c.upvotesCount = c.upvotesCount + 1 WHERE c.id = :id")
     void incrementUpvoteCount(@Param("id") Long id);
 
     @Modifying
-    @Query("UPDATE Post p SET p.downvotesCount = p.upvotesCount - 1 WHERE p.id = :id")
+    @Query("UPDATE Comment c SET c.downvotesCount = c.upvotesCount - 1 WHERE c.id = :id")
     void decrementUpvoteCount(@Param("id") Long id);
 
     @Modifying
-    @Query("UPDATE Post p SET p.downvotesCount = p.downvotesCount + 1 WHERE p.id = :id")
+    @Query("UPDATE Comment c SET c.downvotesCount = c.downvotesCount + 1 WHERE c.id = :id")
     void incrementDownvoteCount(@Param("id") Long id);
 
     @Modifying
-    @Query("UPDATE Post p SET p.downvotesCount = p.downvotesCount - 1 WHERE p.id = :id")
+    @Query("UPDATE Comment c SET c.downvotesCount = c.downvotesCount - 1 WHERE c.id = :id")
     void decrementDownvoteCount(@Param("id") Long id);
 }

@@ -1,9 +1,12 @@
 package com.example.ApuDaily.publication.reaction.service;
 
-import com.example.ApuDaily.publication.reaction.dto.ReactionRemoveRequestDto;
-import com.example.ApuDaily.publication.reaction.dto.ReactionSetRequestDto;
+import com.example.ApuDaily.publication.reaction.dto.ReactionRequestDto;
+import com.example.ApuDaily.publication.reaction.dto.ReactionToggleRequestDto;
+import com.example.ApuDaily.publication.reaction.model.Reaction;
+
+import java.util.Optional;
 
 public interface ReactionService {
-    void setReaction(ReactionSetRequestDto requestDto);
-    void removeReaction(ReactionRemoveRequestDto requestDto);
+    boolean toggleReaction(ReactionToggleRequestDto requestDto);
+    Optional<Reaction> getReactionFromTarget(ReactionRequestDto requestDto);
 }

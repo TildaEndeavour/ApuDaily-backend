@@ -7,8 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReactionSetRequestDto {
-    private Long targetTypeId;
-    private Long entityId;
-    private Long reactionTypeId;
+public class ReactionRequestDto {
+    Long targetTypeId;
+    Long entityId;
 }

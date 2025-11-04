@@ -4,13 +4,11 @@ import com.example.ApuDaily.exception.ApiException;
 import com.example.ApuDaily.exception.ErrorMessage;
 import com.example.ApuDaily.publication.comment.repository.CommentRepository;
 import com.example.ApuDaily.publication.post.repository.PostRepository;
-import com.example.ApuDaily.publication.reaction.dto.ReactionRemoveRequestDto;
-import com.example.ApuDaily.publication.reaction.dto.ReactionSetRequestDto;
+import com.example.ApuDaily.publication.reaction.dto.ReactionRequestDto;
+import com.example.ApuDaily.publication.reaction.dto.ReactionToggleRequestDto;
 import com.example.ApuDaily.publication.reaction.model.Reaction;
-import com.example.ApuDaily.publication.reaction.model.ReactionType;
 import com.example.ApuDaily.publication.reaction.model.TargetType;
 import com.example.ApuDaily.publication.reaction.repository.ReactionRepository;
-import com.example.ApuDaily.publication.reaction.repository.ReactionTypeRepository;
 import com.example.ApuDaily.publication.reaction.repository.TargetTypeRepository;
 import com.example.ApuDaily.user.model.User;
 import com.example.ApuDaily.user.service.AuthUtil;
@@ -19,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class ReactionServiceImpl implements ReactionService{
@@ -38,76 +38,92 @@ public class ReactionServiceImpl implements ReactionService{
     @Autowired
     TargetTypeRepository targetTypeRepository;
 
-    @Autowired
-    ReactionTypeRepository reactionTypeRepository;
-
     @Override
     @Transactional
-    public void setReaction(ReactionSetRequestDto requestDto){
-        User user = authUtil.getUserFromAuthentication(
+    public boolean toggleReaction(ReactionToggleRequestDto requestDto){
+        User authenticatedUser = authUtil.getUserFromAuthentication(
                 SecurityContextHolder.getContext().getAuthentication());
 
         TargetType targetType = targetTypeRepository.findById(requestDto.getTargetTypeId())
                 .orElseThrow(() -> new RuntimeException("Target type not found"));
 
-        ReactionType reactionType = reactionTypeRepository.findById(requestDto.getReactionTypeId())
-                .orElseThrow(() -> new RuntimeException("Reaction type not found"));
+        Optional<Reaction> optionalPrevReaction = reactionRepository.findReactionFromTarget(
+                authenticatedUser.getId(),
+                requestDto.getTargetTypeId(),
+                requestDto.getEntityId());
 
-        reactionRepository.save(Reaction.builder()
-            .user(user)
+        // Checking if a reaction from the user already exists
+        if (optionalPrevReaction.isPresent()) {
+
+            // Deleting prev reaction
+            reactionRepository.delete(optionalPrevReaction.get());
+
+            // Update reaction counter
+            updateCounter(
+                    false,
+                    optionalPrevReaction.get().getIsUpvote(),
+                    optionalPrevReaction.get().getTargetType().getName(),
+                    optionalPrevReaction.get().getEntityId()
+            );
+
+            // Checking if the previous reaction matches the new one
+            if(optionalPrevReaction.get()
+                    .getIsUpvote().equals(requestDto.getIsUpvote()))
+                return false;
+        }
+
+        // The previous reaction does not match the new one
+        // Saving the new one
+        Reaction reaction = reactionRepository.save(Reaction.builder()
+            .user(authenticatedUser)
             .targetType(targetType)
-            .reactionType(reactionType)
+            .isUpvote(requestDto.getIsUpvote())
             .build());
 
-        switch (targetType.getName()){
-            case "POST": {
-                switch (reactionType.getName()){
-                    case "UPVOTE": postRepository.incrementUpvoteCount(requestDto.getEntityId());
-                    case "DOWNVOTE": postRepository.incrementDownvoteCount(requestDto.getEntityId());
-                    default:{}
-                }
-            }
-            case "COMMENTARY": {
-                switch (reactionType.getName()){
-                    case "UPVOTE": commentRepository.incrementUpvoteCount(requestDto.getEntityId());
-                    case "DOWNVOTE": commentRepository.incrementDownvoteCount(requestDto.getEntityId());
-                    default:{}
-                }
-            }
-            default:{}
-        }
+        // Update counter after add new reaction
+        updateCounter(
+                true,
+                reaction.getIsUpvote(),
+                reaction.getTargetType().getName(),
+                reaction.getEntityId()
+        );
+
+        return true;
     }
 
-    @Override
-    @Transactional
-    public void removeReaction(ReactionRemoveRequestDto requestDto){
-        Long authenticatedUserId = authUtil.getUserIdFromAuthentication(
+    public Optional<Reaction> getReactionFromTarget(ReactionRequestDto requestDto){
+        User authenticatedUser = authUtil.getUserFromAuthentication(
                 SecurityContextHolder.getContext().getAuthentication());
 
-        Reaction reaction = reactionRepository.findById(requestDto.getReactionId())
-                .orElseThrow(() -> new RuntimeException("Reaction not found"));
+        return reactionRepository.findReactionFromTarget(
+                authenticatedUser.getId(),
+                requestDto.getTargetTypeId(),
+                requestDto.getEntityId()
+        );
+    }
 
-        if(!authenticatedUserId.equals(reaction.getUser().getId())) throw new ApiException(
-                ErrorMessage.USER_REACTION_MISMATCH, requestDto.getReactionId(), HttpStatus.BAD_REQUEST);
-
-        reactionRepository.delete(reaction);
-
-        switch (reaction.getTargetType().getName()){
-            case "POST": {
-                switch (reaction.getReactionType().getName()){
-                    case "UPVOTE": postRepository.decrementUpvoteCount(reaction.getEntityId());
-                    case "DOWNVOTE": postRepository.incrementDownvoteCount(reaction.getEntityId());
-                    default:{}
+    private void updateCounter(Boolean isIncrement, boolean isUpvote, String targetTypeName, Long entityId) {
+        switch (targetTypeName) {
+            case "POST" -> {
+                if (isIncrement) {
+                    if(isUpvote) postRepository.incrementUpvoteCount(entityId);
+                    else postRepository.incrementDownvoteCount(entityId);
+                }
+                else{
+                    if(isUpvote) postRepository.decrementUpvoteCount(entityId);
+                    else postRepository.decrementDownvoteCount(entityId);
                 }
             }
-            case "COMMENTARY": {
-                switch (reaction.getReactionType().getName()){
-                    case "UPVOTE": commentRepository.incrementUpvoteCount(reaction.getEntityId());
-                    case "DOWNVOTE": commentRepository.incrementDownvoteCount(reaction.getEntityId());
-                    default:{}
+            case "COMMENTARY" -> {
+                if (isIncrement) {
+                    if(isUpvote) commentRepository.incrementUpvoteCount(entityId);
+                    else commentRepository.incrementDownvoteCount(entityId);
+                }
+                else{
+                    if(isUpvote) commentRepository.decrementUpvoteCount(entityId);
+                    else commentRepository.decrementDownvoteCount(entityId);
                 }
             }
-            default:{}
         }
     }
 }

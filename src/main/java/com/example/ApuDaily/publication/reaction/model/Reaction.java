@@ -1,9 +1,10 @@
 package com.example.ApuDaily.publication.reaction.model;
 
-import com.example.ApuDaily.publication.post.model.Post;
 import com.example.ApuDaily.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -24,11 +25,13 @@ public class Reaction {
     @Column(name = "entity_id", nullable = false, unique = false)
     private long entityId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "react_id")
-    private ReactionType reactionType;
+    @Column(name = "isUpvote", nullable = false, unique = false)
+    private Boolean isUpvote;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(name = "created_at", nullable = false, unique = false)
+    private LocalDateTime createdAt;
 }
