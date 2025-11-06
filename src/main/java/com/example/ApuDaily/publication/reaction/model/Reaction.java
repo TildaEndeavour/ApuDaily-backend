@@ -25,7 +25,7 @@ public class Reaction {
     @Column(name = "entity_id", nullable = false, unique = false)
     private long entityId;
 
-    @Column(name = "isUpvote", nullable = false, unique = false)
+    @Column(name = "is_upvote", nullable = false, unique = false)
     private Boolean isUpvote;
 
     @ManyToOne(fetch = FetchType.LAZY)

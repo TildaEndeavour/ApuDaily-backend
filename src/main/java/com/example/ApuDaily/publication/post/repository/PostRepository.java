@@ -21,7 +21,7 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
     void incrementUpvoteCount(@Param("id") Long id);
 
     @Modifying
-    @Query("UPDATE Post p SET p.downvotesCount = p.upvotesCount - 1 WHERE p.id = :id")
+    @Query("UPDATE Post p SET p.upvotesCount = p.upvotesCount - 1 WHERE p.id = :id")
     void decrementUpvoteCount(@Param("id") Long id);
 
     @Modifying

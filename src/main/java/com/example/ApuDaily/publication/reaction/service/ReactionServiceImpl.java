@@ -10,6 +10,7 @@ import com.example.ApuDaily.publication.reaction.model.Reaction;
 import com.example.ApuDaily.publication.reaction.model.TargetType;
 import com.example.ApuDaily.publication.reaction.repository.ReactionRepository;
 import com.example.ApuDaily.publication.reaction.repository.TargetTypeRepository;
+import com.example.ApuDaily.shared.util.DateTimeService;
 import com.example.ApuDaily.user.model.User;
 import com.example.ApuDaily.user.service.AuthUtil;
 import jakarta.transaction.Transactional;
@@ -24,13 +25,16 @@ import java.util.Optional;
 public class ReactionServiceImpl implements ReactionService{
 
     @Autowired
+    AuthUtil authUtil;
+
+    @Autowired
+    DateTimeService dateTimeService;
+
+    @Autowired
     PostRepository postRepository;
 
     @Autowired
     CommentRepository commentRepository;
-
-    @Autowired
-    AuthUtil authUtil;
 
     @Autowired
     ReactionRepository reactionRepository;
@@ -77,7 +81,9 @@ public class ReactionServiceImpl implements ReactionService{
         Reaction reaction = reactionRepository.save(Reaction.builder()
             .user(authenticatedUser)
             .targetType(targetType)
+            .entityId(requestDto.getEntityId())
             .isUpvote(requestDto.getIsUpvote())
+            .createdAt(dateTimeService.getCurrentDatabaseZonedDateTime().toLocalDateTime())
             .build());
 
         // Update counter after add new reaction

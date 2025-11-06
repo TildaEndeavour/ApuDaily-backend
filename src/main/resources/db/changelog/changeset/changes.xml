@@ -282,7 +282,7 @@
             <column name="entity_id" type="bigint">
                 <constraints nullable="false" unique="false"/>
             </column>
-            <column name="isUpvote" type="boolean">
+            <column name="is_upvote" type="boolean">
                 <constraints nullable="false" unique="false"/>
             </column>
             <column name="user_id" type="bigint">
