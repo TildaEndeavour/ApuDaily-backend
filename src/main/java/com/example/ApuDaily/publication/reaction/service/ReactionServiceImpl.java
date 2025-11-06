@@ -1,10 +1,8 @@
 package com.example.ApuDaily.publication.reaction.service;
 
-import com.example.ApuDaily.exception.ApiException;
-import com.example.ApuDaily.exception.ErrorMessage;
 import com.example.ApuDaily.publication.comment.repository.CommentRepository;
 import com.example.ApuDaily.publication.post.repository.PostRepository;
-import com.example.ApuDaily.publication.reaction.dto.ReactionRequestDto;
+import com.example.ApuDaily.publication.reaction.dto.ReactionResponseDto;
 import com.example.ApuDaily.publication.reaction.dto.ReactionToggleRequestDto;
 import com.example.ApuDaily.publication.reaction.model.Reaction;
 import com.example.ApuDaily.publication.reaction.model.TargetType;
@@ -14,8 +12,8 @@ import com.example.ApuDaily.shared.util.DateTimeService;
 import com.example.ApuDaily.user.model.User;
 import com.example.ApuDaily.user.service.AuthUtil;
 import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +24,9 @@ public class ReactionServiceImpl implements ReactionService{
 
     @Autowired
     AuthUtil authUtil;
+
+    @Autowired
+    ModelMapper modelMapper;
 
     @Autowired
     DateTimeService dateTimeService;
@@ -97,15 +98,19 @@ public class ReactionServiceImpl implements ReactionService{
         return true;
     }
 
-    public Optional<Reaction> getReactionFromTarget(ReactionRequestDto requestDto){
+    @Override
+    @Transactional
+    public Optional<ReactionResponseDto> getReactionFromTarget(Long targetTypeId, Long entityId) {
         User authenticatedUser = authUtil.getUserFromAuthentication(
                 SecurityContextHolder.getContext().getAuthentication());
 
-        return reactionRepository.findReactionFromTarget(
+        Optional<Reaction> userReaction = reactionRepository.findReactionFromTarget(
                 authenticatedUser.getId(),
-                requestDto.getTargetTypeId(),
-                requestDto.getEntityId()
+                targetTypeId,
+                entityId
         );
+
+        return userReaction.map(reaction -> modelMapper.map(reaction, ReactionResponseDto.class));
     }
 
     private void updateCounter(Boolean isIncrement, boolean isUpvote, String targetTypeName, Long entityId) {

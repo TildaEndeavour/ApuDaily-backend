@@ -1,9 +1,8 @@
 package com.example.ApuDaily.publication.reaction.controller;
 
-import com.example.ApuDaily.publication.reaction.dto.ReactionRequestDto;
+import com.example.ApuDaily.publication.reaction.dto.ReactionResponseDto;
 import com.example.ApuDaily.publication.reaction.dto.ReactionToggleRequestDto;
 import com.example.ApuDaily.publication.reaction.model.Reaction;
-import com.example.ApuDaily.publication.reaction.repository.ReactionRepository;
 import com.example.ApuDaily.publication.reaction.service.ReactionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +32,10 @@ public class ReactionController {
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Optional<Reaction>> getReactionFromTarget(@Valid @RequestBody ReactionRequestDto requestDto){
-        return ResponseEntity.ok(reactionService.getReactionFromTarget(requestDto));
+    public ResponseEntity<Optional<ReactionResponseDto>> getReactionFromTarget(
+            @RequestParam Long targetTypeId,
+            @RequestParam Long entityId
+    ){
+        return ResponseEntity.ok(reactionService.getReactionFromTarget(targetTypeId, entityId));
     }
 }
