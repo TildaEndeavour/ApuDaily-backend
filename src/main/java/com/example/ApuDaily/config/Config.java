@@ -2,6 +2,8 @@ package com.example.ApuDaily.config;
 
 import com.example.ApuDaily.publication.comment.dto.CommentResponseDto;
 import com.example.ApuDaily.publication.comment.model.Comment;
+import com.example.ApuDaily.publication.reaction.dto.ReactionResponseDto;
+import com.example.ApuDaily.publication.reaction.model.Reaction;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
@@ -15,10 +17,15 @@ public class Config {
 
         ModelMapper modelMapper = new ModelMapper();
 
-        TypeMap<Comment, CommentResponseDto> typeMap = modelMapper.createTypeMap(Comment.class, CommentResponseDto.class);
-        typeMap.addMappings(mapper -> {
+        TypeMap<Comment, CommentResponseDto> commentTypeMap = modelMapper.createTypeMap(Comment.class, CommentResponseDto.class);
+        commentTypeMap.addMappings(mapper -> {
             mapper.map(src -> src.getPost().getId(), CommentResponseDto::setPostId);
             mapper.map(src -> src.getParentComment().getId(), CommentResponseDto::setParentCommentId);
+        });
+
+        TypeMap<Reaction, ReactionResponseDto> reactionTypeMap = modelMapper.createTypeMap(Reaction.class, ReactionResponseDto.class);
+        reactionTypeMap.addMappings(mapper -> {
+            mapper.map(src -> src.getTargetType().getId(), ReactionResponseDto::setTargetTypeId);
         });
 
         return modelMapper;

@@ -45,11 +45,23 @@ public class Post {
     @Column(name="content", nullable = false, unique = false)
     private String content;
 
+    @Column(name="commentaries_count", nullable = false, unique = false)
+    private int commentariesCount;
+
+    @Column(name = "upvotes_count", nullable = false, unique = false)
+    private int upvotesCount;
+
+    @Column(name = "downvotes_count", nullable = false, unique = false)
+    private int downvotesCount;
+
+    @Column(name = "view_count", nullable = false, unique = false)
+    private int viewCount;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "posts_tags",
             joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
@@ -58,9 +70,6 @@ public class Post {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments;
-
-    @Column(name = "view_count", nullable = false, unique = false)
-    private int viewCount;
 
     @Column(name = "created_at", nullable = false, unique = false)
     private LocalDateTime createdAt;

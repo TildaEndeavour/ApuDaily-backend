@@ -35,6 +35,9 @@
             <column name="created_at" type="datetime">
                 <constraints nullable="false" unique="false"/>
             </column>
+            <column name="updated_at" type="datetime">
+                <constraints nullable="true" unique="false"/>
+            </column>
         </createTable>
 
         <sqlFile path="sql/roles_init.sql" relativeToChangelogFile="true" endDelimiter=";" splitStatements="true"/>
@@ -107,11 +110,20 @@
             <column name="view_count" type="bigint">
                 <constraints nullable="false" unique="false"/>
             </column>
+            <column name="commentaries_count" type="bigint">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="upvotes_count" type="bigint">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="downvotes_count" type="bigint">
+                <constraints nullable="false" unique="false"/>
+            </column>
             <column name="created_at" type="datetime">
                 <constraints nullable="false" unique="false"/>
             </column>
             <column name="updated_at" type="datetime">
-                <constraints nullable="false" unique="false"/>
+                <constraints nullable="true" unique="false"/>
             </column>
         </createTable>
     </changeSet>
@@ -193,11 +205,17 @@
             <column name="content" type="varchar">
                 <constraints nullable="false" unique="false"/>
             </column>
+            <column name="upvotes_count" type="bigint">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="downvotes_count" type="bigint">
+                <constraints nullable="false" unique="false"/>
+            </column>
             <column name="created_at" type="datetime">
                 <constraints nullable="false" unique="false"/>
             </column>
             <column name="updated_at" type="datetime">
-                <constraints nullable="false" unique="false"/>
+                <constraints nullable="true" unique="false"/>
             </column>
         </createTable>
 
@@ -210,6 +228,70 @@
                 deferrable="false"
                 initiallyDeferred="false"
                 onDelete="SET NULL"/>
+    </changeSet>
+
+    <changeSet id="timezones_and_user_profiles_init" author="TildaEndeavour">
+
+        <createTable tableName="timezones">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="gmt" type="varchar">
+                <constraints nullable="false" unique="false"/>
+            </column>
+        </createTable>
+
+        <sqlFile path="sql/timezones_init.sql" relativeToChangelogFile="true" endDelimiter=";" splitStatements="true"/>
+
+        <createTable tableName="profiles">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_user_id" references="users(id)"/>
+            </column>
+            <column name="timezone_id" type="bigint">
+                <constraints nullable="false" unique="false" foreignKeyName="fk_timezone_id" references="timezones(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="reactions_init" author="TildaEndeavour">
+
+        <createTable tableName="target_types">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+
+        <sqlFile path="sql/target_types_init.sql" relativeToChangelogFile="true" endDelimiter=";" splitStatements="true"/>
+
+        <createTable tableName="reactions">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="target_type_id" type="bigint">
+                <constraints nullable="false" unique="false" foreignKeyName="fk_entity_type_id" references="target_types(id)"/>
+            </column>
+            <column name="entity_id" type="bigint">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="is_upvote" type="boolean">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_user_id" references="users(id)"/>
+            </column>
+            <column name="created_at" type="datetime">
+                <constraints nullable="false" unique="false"/>
+            </column>
+        </createTable>
     </changeSet>
 
 </databaseChangeLog>

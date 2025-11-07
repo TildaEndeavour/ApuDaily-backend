@@ -6,21 +6,20 @@ import com.example.ApuDaily.publication.category.model.Category;
 import com.example.ApuDaily.publication.category.repository.CategoryRepository;
 import com.example.ApuDaily.publication.media.model.Media;
 import com.example.ApuDaily.publication.media.repository.MediaRepository;
-import com.example.ApuDaily.publication.post.dto.PostCreateRequestDto;
-import com.example.ApuDaily.publication.post.dto.PostDeleteRequestDto;
-import com.example.ApuDaily.publication.post.dto.PostSearchRequestDto;
-import com.example.ApuDaily.publication.post.dto.PostUpdateRequestDto;
+import com.example.ApuDaily.publication.post.dto.*;
 import com.example.ApuDaily.publication.post.model.Post;
 import com.example.ApuDaily.publication.post.repository.PostRepository;
 import com.example.ApuDaily.publication.post.specification.PostSpecification;
 import com.example.ApuDaily.publication.tag.model.Tag;
 import com.example.ApuDaily.publication.tag.repository.TagRepository;
 import com.example.ApuDaily.security.HtmlSanitizerUtil;
+import com.example.ApuDaily.shared.util.DateTimeService;
 import com.example.ApuDaily.user.model.User;
 import com.example.ApuDaily.user.repository.UserRepository;
 import com.example.ApuDaily.user.service.AuthUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,7 +27,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +35,12 @@ public class PostServiceImpl implements PostService{
 
     @Autowired
     AuthUtil authUtil;
+
+    @Autowired
+    ModelMapper modelMapper;
+
+    @Autowired
+    DateTimeService dateTimeService;
 
     @Autowired
     UserRepository userRepository;
@@ -55,30 +59,31 @@ public class PostServiceImpl implements PostService{
 
     @Override
     @Transactional
-    public Page<Post> getPosts(int currentPageNumber, int pageSize, PostSearchRequestDto filter) {
-        Specification<Post> spec = null;
+    public Page<PostResponseDto> getPosts(int currentPageNumber, int pageSize, PostSearchRequestDto filter) {
 
-        if (filter != null &&
-                (filter.getSearchQuery() != null && !filter.getSearchQuery().isBlank() ||
-                        filter.getUsersId() != null && !filter.getUsersId().isEmpty() ||
-                        filter.getTagsId() != null && !filter.getTagsId().isEmpty() ||
-                        filter.getCategoryId() != null)) {
-            spec = PostSpecification.withFilters(filter);
-        }
+        Specification<Post> spec = Optional.ofNullable(filter)
+                .filter(f -> f.getSearchQuery() != null && !f.getSearchQuery().isBlank()
+                        || f.getUsersId() != null && !f.getUsersId().isEmpty()
+                        || f.getTagsId() != null && !f.getTagsId().isEmpty()
+                        || f.getCategoryId() != null)
+                .map(PostSpecification::withFilters)
+                .orElse(Specification.where(null));
 
-        return postRepository.findAll(spec, PageRequest.of(currentPageNumber, pageSize));
+        Page<Post> result = postRepository.findAll(spec, PageRequest.of(currentPageNumber, pageSize));
+        return result.map(post -> modelMapper.map(post, PostResponseDto.class));
     }
 
     @Override
     @Transactional
-    public Post getPostById(long id) {
-        return postRepository.findById(id)
+    public PostResponseDto getPostById(long id) {
+        Post post = postRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Post with id " + id + " not found"));
+        return modelMapper.map(post, PostResponseDto.class);
     }
 
     @Override
     @Transactional
-    public Post createPost(PostCreateRequestDto requestDto){
+    public PostResponseDto createPost(PostCreateRequestDto requestDto){
 
         User user = Optional.ofNullable(requestDto.getAuthorId())
                 .flatMap(authorId -> userRepository.findById(authorId))
@@ -97,7 +102,7 @@ public class PostServiceImpl implements PostService{
                 .flatMap(mediaId -> mediaRepository.findById(mediaId))
                 .orElse(null);
 
-        return postRepository.save(Post.builder()
+        Post result = postRepository.save(Post.builder()
                 .user(user)
                 .title(requestDto.getTitle())
                 .description(requestDto.getDescription())
@@ -105,22 +110,27 @@ public class PostServiceImpl implements PostService{
                 .content(HtmlSanitizerUtil.sanitize(requestDto.getContent()))
                 .category(category)
                 .tags(tags)
+                .commentariesCount(0)
+                .upvotesCount(0)
+                .downvotesCount(0)
                 .viewCount(0)
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .createdAt(dateTimeService.getCurrentDatabaseZonedDateTime().toLocalDateTime())
+                .updatedAt(null)
                 .build());
+
+        return modelMapper.map(result, PostResponseDto.class);
     }
 
     @Override
     @Transactional
-    public Post updatePost(PostUpdateRequestDto requestDto){
+    public PostResponseDto updatePost(PostUpdateRequestDto requestDto){
 
         Long userId = authUtil.getUserIdFromAuthentication(
                 SecurityContextHolder.getContext().getAuthentication());
 
         if(!userId.equals(requestDto.getAuthorId())) throw new ApiException(ErrorMessage.USER_POST_MISMATCH, requestDto.getPostId(), HttpStatus.BAD_REQUEST);
 
-        Post post = postRepository.findById(requestDto.getPostId())
+        Post result = postRepository.findById(requestDto.getPostId())
                 .orElseThrow(() -> new ApiException(ErrorMessage.POST_NOT_FOUND, requestDto.getPostId(), HttpStatus.NOT_FOUND));
 
         Media thumbnail = Optional.ofNullable(requestDto.getThumbnailId())
@@ -134,15 +144,15 @@ public class PostServiceImpl implements PostService{
                                 HttpStatus.NOT_FOUND
                         ));
 
-        post.setThumbnail(thumbnail);
-        post.setTitle(requestDto.getTitle());
-        post.setDescription(requestDto.getDescription());
-        post.setContent(requestDto.getContent());
-        post.setCategory(category);
-        post.setTags(tagRepository.findAllById(requestDto.getTagsId()));
-        post.setUpdatedAt(LocalDateTime.now());
+        result.setThumbnail(thumbnail);
+        result.setTitle(requestDto.getTitle());
+        result.setDescription(requestDto.getDescription());
+        result.setContent(requestDto.getContent());
+        result.setCategory(category);
+        result.setTags(tagRepository.findAllById(requestDto.getTagsId()));
+        result.setUpdatedAt(dateTimeService.getCurrentDatabaseZonedDateTime().toLocalDateTime());
 
-        return post;
+        return modelMapper.map(result, PostResponseDto.class);
     }
 
     @Override

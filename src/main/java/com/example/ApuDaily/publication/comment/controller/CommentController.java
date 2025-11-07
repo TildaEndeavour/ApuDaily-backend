@@ -23,9 +23,6 @@ public class CommentController {
     @Autowired
     CommentService commentService;
 
-    @Autowired
-    ModelMapper modelMapper;
-
     @PostMapping("/search")
     public ResponseEntity<Page<CommentResponseDto>> searchComments(
             @RequestParam(defaultValue = "10") int pageSize,
@@ -40,7 +37,7 @@ public class CommentController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<CommentResponseDto> createComment(@Valid @RequestBody CommentCreateRequestDto requestDto){
         CommentResponseDto result = commentService.createComment(requestDto);
-        return ResponseEntity.ok(modelMapper.map(result, CommentResponseDto.class));
+        return ResponseEntity.ok(result);
     }
 
     @PatchMapping("/{comment_id}")

@@ -9,7 +9,6 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -28,6 +27,12 @@ public class PostResponseDto {
     private String description;
 
     private String content;
+
+    private int commentariesCount;
+
+    private int upvotesCount;
+
+    private int downvotesCount;
 
     private int viewCount;
 
