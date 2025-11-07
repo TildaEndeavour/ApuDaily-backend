@@ -46,6 +46,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, apiUrl.getAuthUrl())
                         .permitAll()
+                        .requestMatchers(HttpMethod.GET, apiUrl.getUsersProfilesUrl())
+                        .permitAll()
                         .requestMatchers(HttpMethod.GET, apiUrl.getUsersProfileUrl())
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, apiUrl.getTimezoneUrl())
