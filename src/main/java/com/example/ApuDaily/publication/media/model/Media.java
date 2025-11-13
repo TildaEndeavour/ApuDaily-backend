@@ -3,7 +3,7 @@ package com.example.ApuDaily.publication.media.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -33,5 +33,5 @@ public class Media {
     private String url;
 
     @Column(name = "created_at", unique = false, nullable = false)
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 }

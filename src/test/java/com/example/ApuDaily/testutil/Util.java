@@ -16,21 +16,17 @@ public interface Util {
 
     Media createMedia(int seed);
 
-    Comment createComment(int seed);
+    Comment createComment(int seed, Post post);
 
-    Comment createComment(int seed, User user);
+    Comment createComment(int seed, Post post, User user);
 
     Category createCategory (int seed);
 
-    Category createCategory (int seed, User user);
-
     Tag createTag(int seed);
 
-    Tag createTag(int seed, User user);
+    Reaction createReaction(int seed, Post post);
 
-    Reaction createReaction(int seed);
-
-    Reaction createReaction(int seed, User user);
+    Reaction createReaction(int seed, Post post, User user);
 
     User createUser(int seed);
 
