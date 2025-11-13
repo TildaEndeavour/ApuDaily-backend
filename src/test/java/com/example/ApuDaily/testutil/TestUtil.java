@@ -15,8 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 public class TestUtil implements Util{
-    @Autowired
-    DateTimeService dateTimeService;
+    DateTimeService dateTimeService = new DateTimeService();
 
 
     @Override
