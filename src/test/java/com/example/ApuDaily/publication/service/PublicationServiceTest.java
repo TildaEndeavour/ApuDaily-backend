@@ -10,7 +10,6 @@ import com.example.ApuDaily.publication.post.dto.PostSearchRequestDto;
 import com.example.ApuDaily.publication.post.model.Post;
 import com.example.ApuDaily.publication.post.repository.PostRepository;
 import com.example.ApuDaily.publication.post.service.PostServiceImpl;
-import com.example.ApuDaily.publication.post.specification.PostSpecification;
 import com.example.ApuDaily.publication.tag.model.Tag;
 import com.example.ApuDaily.publication.tag.repository.TagRepository;
 import com.example.ApuDaily.shared.util.DateTimeService;
@@ -31,6 +30,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -138,5 +138,22 @@ public class PublicationServiceTest {
 
         assertNotNull(result);
         assertTrue(result.isEmpty(), "Expected empty page when no posts found");
+    }
+
+    @Test
+    void getPostById_shouldReturnDto_whenValidId() {
+        //Given
+        User user = testUtil.createUser(1);
+        Post post = testUtil.createPost(1, user);
+        when(postRepository.findById(post.getId())).thenReturn(Optional.of(post));
+
+        //When
+        PostResponseDto responsePost = postService.getPostById(post.getId());
+
+        //Then
+        verify(postRepository, times(1)).findById(post.getId());
+        assertThat(responsePost)
+                .usingRecursiveComparison()
+                .isEqualTo(modelMapper.map(post, PostResponseDto.class));
     }
 }
