@@ -6,9 +6,11 @@ import com.example.ApuDaily.publication.media.model.Media;
 import com.example.ApuDaily.publication.media.repository.MediaRepository;
 import com.example.ApuDaily.publication.post.dto.PostCreateRequestDto;
 import com.example.ApuDaily.publication.post.dto.PostResponseDto;
+import com.example.ApuDaily.publication.post.dto.PostSearchRequestDto;
 import com.example.ApuDaily.publication.post.model.Post;
 import com.example.ApuDaily.publication.post.repository.PostRepository;
 import com.example.ApuDaily.publication.post.service.PostServiceImpl;
+import com.example.ApuDaily.publication.post.specification.PostSpecification;
 import com.example.ApuDaily.publication.tag.model.Tag;
 import com.example.ApuDaily.publication.tag.repository.TagRepository;
 import com.example.ApuDaily.shared.util.DateTimeService;
@@ -21,13 +23,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -77,7 +81,7 @@ public class PublicationServiceTest {
         when(tagRepository.findAllById(requestDto.getTagsId())).thenReturn(tags);
         when(mediaRepository.findById(requestDto.getThumbnailId())).thenReturn(Optional.of(thumbnail));
         when(dateTimeService.getCurrentDatabaseZonedDateTime()).thenReturn(fixedTime);
-        when(postRepository.save(ArgumentMatchers.<Post>any())).thenAnswer(invocation -> {
+        when(postRepository.save(ArgumentMatchers.any())).thenAnswer(invocation -> {
             Post saved = invocation.getArgument(0);
             saved.setId(1L);
             return saved;
@@ -110,5 +114,29 @@ public class PublicationServiceTest {
         assertEquals(user.getId(), postResponseDto.getUser().getId());
         assertEquals(category.getId(), postResponseDto.getCategory().getId());
         assertEquals(2, postResponseDto.getTags().size());
+    }
+
+    @Test
+    void getPostByFilter_shouldReturnEmptyPage_whenNoPostsFound() {
+        // Given
+        Integer nonExistentPostId = 1000;
+        int currentPageNumber = 0;
+        int pageSize = 10;
+
+        PostSearchRequestDto postFilter =
+                dtoUtil.postSearchRequestDto(null, List.of(nonExistentPostId), null, null);
+
+        when(postRepository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(Page.empty());
+
+        // When
+        Page<PostResponseDto> result = postService.getPosts(currentPageNumber, pageSize, postFilter);
+
+        // Then
+        verify(postRepository, times(1))
+                .findAll(any(Specification.class), any(Pageable.class));
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty(), "Expected empty page when no posts found");
     }
 }

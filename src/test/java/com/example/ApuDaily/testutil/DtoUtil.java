@@ -1,14 +1,11 @@
 package com.example.ApuDaily.testutil;
 
-import com.example.ApuDaily.publication.category.model.Category;
 import com.example.ApuDaily.publication.comment.dto.CommentCreateRequestDto;
 import com.example.ApuDaily.publication.comment.dto.CommentDeleteRequestDto;
 import com.example.ApuDaily.publication.comment.dto.CommentUpdateRequestDto;
-import com.example.ApuDaily.publication.media.model.Media;
 import com.example.ApuDaily.publication.post.dto.PostCreateRequestDto;
-import com.example.ApuDaily.publication.tag.model.Tag;
+import com.example.ApuDaily.publication.post.dto.PostSearchRequestDto;
 import com.example.ApuDaily.user.model.User;
-
 import java.util.List;
 import java.util.Random;
 
@@ -24,6 +21,17 @@ public class DtoUtil {
                 .content("Publication content " + seed)
                 .categoryId(categoryId)
                 .tagsId(tagsId)
+                .build();
+    }
+
+    public PostSearchRequestDto postSearchRequestDto(
+            String searchQuery, List<Integer> usersId, List<Integer> tagsId, Integer categoryId
+    ){
+        return PostSearchRequestDto.builder()
+                .searchQuery(searchQuery)
+                .usersId(usersId)
+                .tagsId(tagsId)
+                .categoryId(categoryId)
                 .build();
     }
 
