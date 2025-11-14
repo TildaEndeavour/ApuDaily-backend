@@ -7,17 +7,13 @@ import com.example.ApuDaily.publication.post.model.Post;
 import com.example.ApuDaily.publication.reaction.model.Reaction;
 import com.example.ApuDaily.publication.reaction.model.TargetType;
 import com.example.ApuDaily.publication.tag.model.Tag;
-import com.example.ApuDaily.shared.util.DateTimeService;
 import com.example.ApuDaily.user.model.Role;
 import com.example.ApuDaily.user.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 public class TestUtil implements Util{
-    DateTimeService dateTimeService = new DateTimeService();
-
-
     @Override
     public Post createPost (int seed){
 
@@ -75,7 +71,7 @@ public class TestUtil implements Util{
                 .user(user)
                 .parentComment(null)
                 .content("Comment " + seed)
-                .createdAt(dateTimeService.getCurrentDatabaseZonedDateTime().toLocalDateTime())
+                .createdAt(ZonedDateTime.parse("2024-01-01T12:00:00Z").toLocalDateTime())
                 .updatedAt(null)
                 .build();
     }
@@ -88,7 +84,7 @@ public class TestUtil implements Util{
                 .user(user)
                 .parentComment(null)
                 .content("Comment " + seed)
-                .createdAt(dateTimeService.getCurrentDatabaseZonedDateTime().toLocalDateTime())
+                .createdAt(ZonedDateTime.parse("2024-01-01T12:00:00Z").toLocalDateTime())
                 .updatedAt(null)
                 .build();
     }
@@ -108,7 +104,7 @@ public class TestUtil implements Util{
                 .entityId(post.getId())
                 .isUpvote((seed & 1) == 1)
                 .user(user)
-                .createdAt(dateTimeService.getCurrentDatabaseZonedDateTime().toLocalDateTime())
+                .createdAt(ZonedDateTime.parse("2024-01-01T12:00:00Z").toLocalDateTime())
                 .build();
     }
 
@@ -125,7 +121,7 @@ public class TestUtil implements Util{
                 .entityId(post.getId())
                 .isUpvote((seed & 1) == 1)
                 .user(user)
-                .createdAt(dateTimeService.getCurrentDatabaseZonedDateTime().toLocalDateTime())
+                .createdAt(ZonedDateTime.parse("2024-01-01T12:00:00Z").toLocalDateTime())
                 .build();
     }
 
@@ -167,7 +163,7 @@ public class TestUtil implements Util{
                 .id((long) seed)
                 .username("Username " + seed)
                 .password("Password " + seed)
-                .createdAt(dateTimeService.getCurrentDatabaseZonedDateTime().toLocalDateTime())
+                .createdAt(ZonedDateTime.parse("2024-01-01T12:00:00Z").toLocalDateTime())
                 .updatedAt(null)
                 .build();
     }
@@ -185,7 +181,7 @@ public class TestUtil implements Util{
                 .filename("filename " + seed)
                 .extension("jpg")
                 .url(url)
-                .createdAt(dateTimeService.getCurrentDatabaseZonedDateTime().toLocalDateTime())
+                .createdAt(ZonedDateTime.parse("2024-01-01T12:00:00Z").toLocalDateTime())
                 .build();
     }
 
