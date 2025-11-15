@@ -65,7 +65,7 @@ public class MediaServiceImpl implements MediaService {
                 .filename(filename)
                 .extension(ext)
                 .url(resultUrl)
-                .createdAt(Timestamp.valueOf(dateTimeService.getCurrentDatabaseZonedDateTime().toLocalDateTime()))
+                .createdAt(dateTimeService.getCurrentDatabaseZonedDateTime().toLocalDateTime())
                 .build());
     }
 

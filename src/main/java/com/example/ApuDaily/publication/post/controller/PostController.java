@@ -33,21 +33,21 @@ public class PostController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PostResponseDto> createPost(@Valid @RequestBody PostCreateRequestDto requestDto){
-        PostResponseDto result = postService.createPost(requestDto);
-        return ResponseEntity.ok(result);
+        PostResponseDto responseDto = postService.createPost(requestDto);
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @PatchMapping("/{post_id}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<PostResponseDto> updatePost(@Valid @RequestBody PostUpdateRequestDto requestDto){
-        PostResponseDto result = postService.updatePost(requestDto);
-        return ResponseEntity.ok(result);
+        PostResponseDto responseDto = postService.updatePost(requestDto);
+        return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/{post_id}")
     public ResponseEntity<PostResponseDto> getPostById(@PathVariable("post_id") long post_id){
-        PostResponseDto result = postService.getPostById(post_id);
-        return ResponseEntity.ok(result);
+        PostResponseDto responseDto = postService.getPostById(post_id);
+        return ResponseEntity.ok(responseDto);
     }
 
     @DeleteMapping("/{post_id}")
