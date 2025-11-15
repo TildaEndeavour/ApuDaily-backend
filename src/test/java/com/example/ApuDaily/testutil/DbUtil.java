@@ -72,14 +72,28 @@ public class DbUtil implements Util {
         mediaRepository.deleteAll();
         reactionRepository.deleteAll();
         targetTypeRepository.deleteAll();
+        roleRepository.deleteAll();
     }
 
     @Override
     public User createUser(int seed){
+        Role userRole = createUserRole();
         return userRepository.save(User.builder()
                 .username("User " + seed)
                 .email("email" + seed + "@gmail.com")
                 .password("password " + seed)
+                .role(userRole)
+                .createdAt(ZonedDateTime.parse("2024-01-01T12:00:00Z").toLocalDateTime())
+                .updatedAt(null)
+                .build());
+    }
+
+    public User createUser(int seed, Role role){
+        return userRepository.save(User.builder()
+                .username("User " + seed)
+                .email("email" + seed + "@gmail.com")
+                .password("password " + seed)
+                .role(role)
                 .createdAt(ZonedDateTime.parse("2024-01-01T12:00:00Z").toLocalDateTime())
                 .updatedAt(null)
                 .build());
@@ -131,6 +145,7 @@ public class DbUtil implements Util {
     }
 
     @Override
+    @Transactional
     public Post createPost(int seed){
         User user = createUser(seed);
         Media thumbnail = createMedia(seed);
@@ -155,6 +170,7 @@ public class DbUtil implements Util {
     }
 
     @Override
+    @Transactional
     public Post createPost(int seed, User user){
         Media thumbnail = createMedia(seed);
         Category category = createCategory(seed);

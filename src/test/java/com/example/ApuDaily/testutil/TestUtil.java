@@ -163,6 +163,7 @@ public class TestUtil implements Util{
                 .id((long) seed)
                 .username("Username " + seed)
                 .password("Password " + seed)
+                .role(createUserRole())
                 .createdAt(ZonedDateTime.parse("2024-01-01T12:00:00Z").toLocalDateTime())
                 .updatedAt(null)
                 .build();
