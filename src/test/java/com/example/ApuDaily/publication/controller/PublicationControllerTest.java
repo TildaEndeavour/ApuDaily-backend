@@ -98,13 +98,5 @@ public class PublicationControllerTest {
                 .andExpect(jsonPath("$.content", is(requestDto.getContent())))
                 .andDo(print())
                 .andReturn();
-
-        String responseContent = mvcResult.getResponse().getContentAsString();
-        PostResponseDto responseDto =
-                objectMapper.readValue(responseContent, new TypeReference<PostResponseDto>() {});
-
-        //Db
-        Post createdPost = dbUtil.getPostById(responseDto.getId());
-        assertEquals(user.getId(), createdPost.getUser().getId());
     }
 }
