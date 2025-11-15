@@ -26,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @TestComponent
 public class DbUtil implements Util {
@@ -191,6 +192,10 @@ public class DbUtil implements Util {
                 .createdAt(ZonedDateTime.parse("2024-01-01T12:00:00Z").toLocalDateTime())
                 .updatedAt(null)
                 .build());
+    }
+
+    public Post getPostById(Long id){
+        return postRepository.findById(id).orElse(null);
     }
 
     @Override
