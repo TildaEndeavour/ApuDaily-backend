@@ -1,6 +1,7 @@
 package com.example.ApuDaily.publication.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -21,6 +22,7 @@ import com.example.ApuDaily.testutil.DtoUtil;
 import com.example.ApuDaily.testutil.TestUtil;
 import com.example.ApuDaily.user.model.User;
 import com.example.ApuDaily.user.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -148,5 +150,19 @@ public class PublicationServiceTest {
     assertThat(responsePost)
         .usingRecursiveComparison()
         .isEqualTo(modelMapper.map(post, PostResponseDto.class));
+  }
+
+  @Test
+  void getPostById_shouldThrowNotFoundException_whenInvalidId() {
+    // Given
+    Long invalidId = 999L;
+    when(postRepository.findById(invalidId)).thenReturn(Optional.empty());
+
+    // When & Then
+    assertThatThrownBy(() -> postService.getPostById(invalidId))
+        .isInstanceOf(EntityNotFoundException.class)
+        .hasMessageContaining("Post with id " + invalidId + " not found");
+
+    verify(postRepository, times(1)).findById(invalidId);
   }
 }
