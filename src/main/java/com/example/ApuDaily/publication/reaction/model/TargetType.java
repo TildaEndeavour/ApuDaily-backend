@@ -11,10 +11,10 @@ import lombok.*;
 @Entity
 @Table(name = "target_types")
 public class TargetType {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "name", unique = true, nullable = false)
-    private String name;
+  @Column(name = "name", unique = true, nullable = false)
+  private String name;
 }

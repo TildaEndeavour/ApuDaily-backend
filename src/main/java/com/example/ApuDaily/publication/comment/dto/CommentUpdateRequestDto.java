@@ -8,6 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentUpdateRequestDto {
-    Long commentId;
-    String content;
+  Long commentId;
+  String content;
 }

@@ -1,9 +1,8 @@
 package com.example.ApuDaily.user.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.util.Set;
+import lombok.*;
 
 @Getter
 @Setter
@@ -13,13 +12,13 @@ import java.util.Set;
 @Entity
 @Table(name = "roles")
 public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "name", nullable = false, unique = true)
-    private String name;
+  @Column(name = "name", nullable = false, unique = true)
+  private String name;
 
-    @OneToMany(mappedBy = "role")
-    private Set<User> users;
+  @OneToMany(mappedBy = "role")
+  private Set<User> users;
 }

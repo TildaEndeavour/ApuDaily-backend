@@ -11,54 +11,51 @@ import java.util.Random;
 
 public class DtoUtil {
 
-    public PostCreateRequestDto postCreateRequestDto (
-            int seed, Long categoryId, List<Long> tagsId, Long thumbnailId, User user){
-        return PostCreateRequestDto.builder()
-                .authorId(user.getId())
-                .thumbnailId(thumbnailId)
-                .title("Publication title " + seed)
-                .description("Publication description " + seed)
-                .content("Publication content " + seed)
-                .categoryId(categoryId)
-                .tagsId(tagsId)
-                .build();
-    }
+  public PostCreateRequestDto postCreateRequestDto(
+      int seed, Long categoryId, List<Long> tagsId, Long thumbnailId, User user) {
+    return PostCreateRequestDto.builder()
+        .authorId(user.getId())
+        .thumbnailId(thumbnailId)
+        .title("Publication title " + seed)
+        .description("Publication description " + seed)
+        .content("Publication content " + seed)
+        .categoryId(categoryId)
+        .tagsId(tagsId)
+        .build();
+  }
 
-    public PostSearchRequestDto postSearchRequestDto(
-            String searchQuery, List<Integer> usersId, List<Integer> tagsId, Integer categoryId
-    ){
-        return PostSearchRequestDto.builder()
-                .searchQuery(searchQuery)
-                .usersId(usersId)
-                .tagsId(tagsId)
-                .categoryId(categoryId)
-                .build();
-    }
+  public PostSearchRequestDto postSearchRequestDto(
+      String searchQuery, List<Integer> usersId, List<Integer> tagsId, Integer categoryId) {
+    return PostSearchRequestDto.builder()
+        .searchQuery(searchQuery)
+        .usersId(usersId)
+        .tagsId(tagsId)
+        .categoryId(categoryId)
+        .build();
+  }
 
-    public CommentCreateRequestDto commentCreateRequestDto (int seed){
-        Random random = new Random(seed);
+  public CommentCreateRequestDto commentCreateRequestDto(int seed) {
+    Random random = new Random(seed);
 
-        return CommentCreateRequestDto.builder()
-                .postId(random.nextLong())
-                .parentCommentId(random.nextLong())
-                .content("Comment content " + seed)
-                .build();
-    }
+    return CommentCreateRequestDto.builder()
+        .postId(random.nextLong())
+        .parentCommentId(random.nextLong())
+        .content("Comment content " + seed)
+        .build();
+  }
 
-    public CommentUpdateRequestDto commentUpdateRequestDto (int seed){
-        Random random = new Random(seed);
+  public CommentUpdateRequestDto commentUpdateRequestDto(int seed) {
+    Random random = new Random(seed);
 
-        return CommentUpdateRequestDto.builder()
-                .commentId(random.nextLong())
-                .content("Comment content " + seed)
-                .build();
-    }
+    return CommentUpdateRequestDto.builder()
+        .commentId(random.nextLong())
+        .content("Comment content " + seed)
+        .build();
+  }
 
-    public CommentDeleteRequestDto commentDeleteRequestDto (int seed){
-        Random random = new Random(seed);
+  public CommentDeleteRequestDto commentDeleteRequestDto(int seed) {
+    Random random = new Random(seed);
 
-        return CommentDeleteRequestDto.builder()
-                .commentId(random.nextLong())
-                .build();
-    }
+    return CommentDeleteRequestDto.builder().commentId(random.nextLong()).build();
+  }
 }

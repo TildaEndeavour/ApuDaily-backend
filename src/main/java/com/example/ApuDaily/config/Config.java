@@ -12,29 +12,33 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class Config {
-    @Bean
-    public ModelMapper modelMapper(){
+  @Bean
+  public ModelMapper modelMapper() {
 
-        ModelMapper modelMapper = new ModelMapper();
+    ModelMapper modelMapper = new ModelMapper();
 
-        TypeMap<Comment, CommentResponseDto> commentTypeMap = modelMapper.createTypeMap(Comment.class, CommentResponseDto.class);
-        commentTypeMap.addMappings(mapper -> {
-            mapper.map(src -> src.getPost().getId(), CommentResponseDto::setPostId);
-            mapper.map(src -> src.getParentComment().getId(), CommentResponseDto::setParentCommentId);
+    TypeMap<Comment, CommentResponseDto> commentTypeMap =
+        modelMapper.createTypeMap(Comment.class, CommentResponseDto.class);
+    commentTypeMap.addMappings(
+        mapper -> {
+          mapper.map(src -> src.getPost().getId(), CommentResponseDto::setPostId);
+          mapper.map(src -> src.getParentComment().getId(), CommentResponseDto::setParentCommentId);
         });
 
-        TypeMap<Reaction, ReactionResponseDto> reactionTypeMap = modelMapper.createTypeMap(Reaction.class, ReactionResponseDto.class);
-        reactionTypeMap.addMappings(mapper -> {
-            mapper.map(src -> src.getTargetType().getId(), ReactionResponseDto::setTargetTypeId);
+    TypeMap<Reaction, ReactionResponseDto> reactionTypeMap =
+        modelMapper.createTypeMap(Reaction.class, ReactionResponseDto.class);
+    reactionTypeMap.addMappings(
+        mapper -> {
+          mapper.map(src -> src.getTargetType().getId(), ReactionResponseDto::setTargetTypeId);
         });
 
-        return modelMapper;
-    }
+    return modelMapper;
+  }
 
-    @Bean
-    public ObjectMapper objectMapper(){
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.findAndRegisterModules();
-        return objectMapper;
-    }
+  @Bean
+  public ObjectMapper objectMapper() {
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.findAndRegisterModules();
+    return objectMapper;
+  }
 }

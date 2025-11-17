@@ -1,7 +1,7 @@
 package com.example.ApuDaily.publication.post.dto;
-import lombok.*;
 
 import java.util.List;
+import lombok.*;
 
 @Getter
 @Setter
@@ -9,17 +9,17 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostCreateRequestDto {
-    private Long authorId;
+  private Long authorId;
 
-    private Long thumbnailId;
+  private Long thumbnailId;
 
-    private String title;
+  private String title;
 
-    private Long categoryId;
+  private Long categoryId;
 
-    private List<Long> tagsId;
+  private List<Long> tagsId;
 
-    private String description;
+  private String description;
 
-    private String content;
+  private String content;
 }

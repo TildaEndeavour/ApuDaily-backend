@@ -11,13 +11,13 @@ import lombok.*;
 @Table(name = "categories")
 @Entity
 public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "name", unique = true, nullable = false)
-    private String name;
+  @Column(name = "name", unique = true, nullable = false)
+  private String name;
 
-    @Column(name = "slug", unique = true, nullable = false)
-    private String slug;
+  @Column(name = "slug", unique = true, nullable = false)
+  private String slug;
 }

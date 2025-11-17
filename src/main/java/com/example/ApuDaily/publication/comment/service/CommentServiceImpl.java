@@ -10,12 +10,12 @@ import com.example.ApuDaily.publication.post.model.Post;
 import com.example.ApuDaily.publication.post.repository.PostRepository;
 import com.example.ApuDaily.shared.util.DateTimeService;
 import com.example.ApuDaily.user.model.User;
-import com.example.ApuDaily.user.repository.UserRepository;
 import com.example.ApuDaily.user.service.AuthUtil;
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,64 +23,72 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-
 @Service
-public class CommentServiceImpl implements CommentService{
+public class CommentServiceImpl implements CommentService {
 
-    @Autowired
-    CommentRepository commentRepository;
+  @Autowired CommentRepository commentRepository;
 
-    @Autowired
-    ModelMapper modelMapper;
+  @Autowired ModelMapper modelMapper;
 
-    @Autowired
-    AuthUtil authUtil;
+  @Autowired AuthUtil authUtil;
 
-    @Autowired
-    DateTimeService dateTimeService;
+  @Autowired DateTimeService dateTimeService;
 
-    @Autowired
-    PostRepository postRepository;
+  @Autowired PostRepository postRepository;
 
-    @Override
-    @Transactional
-    public Page<CommentResponseDto> getCommentsByFilter(int currentPageNumber, int pageSize, CommentFilter filter){
-        Specification<Comment> spec = null;
+  @Override
+  @Transactional
+  public Page<CommentResponseDto> getCommentsByFilter(
+      int currentPageNumber, int pageSize, CommentFilter filter) {
+    Specification<Comment> spec = null;
 
-        if(filter != null && (filter.getPostId() != null ||
-                              filter.getUserId() != null ||
-                              filter.getParentCommentId() != null ||
-                              filter.getCommentId() != null))
-        {
-            spec = CommentSpecification.withFilters(filter);
-        }
-
-        Page<Comment> commentsPage = commentRepository.findAll(spec,
-                PageRequest.of(currentPageNumber, pageSize, Sort.by(Sort.Direction.ASC, "createdAt")));
-        return commentsPage.map(comment -> modelMapper.map(comment, CommentResponseDto.class));
+    if (filter != null
+        && (filter.getPostId() != null
+            || filter.getUserId() != null
+            || filter.getParentCommentId() != null
+            || filter.getCommentId() != null)) {
+      spec = CommentSpecification.withFilters(filter);
     }
 
-    @Override
-    @Transactional
-    public CommentResponseDto createComment(CommentCreateRequestDto requestDto){
+    Page<Comment> commentsPage =
+        commentRepository.findAll(
+            spec,
+            PageRequest.of(currentPageNumber, pageSize, Sort.by(Sort.Direction.ASC, "createdAt")));
+    return commentsPage.map(comment -> modelMapper.map(comment, CommentResponseDto.class));
+  }
 
-        User user = authUtil.getUserFromAuthentication(
-                SecurityContextHolder.getContext().getAuthentication());
+  @Override
+  @Transactional
+  public CommentResponseDto createComment(CommentCreateRequestDto requestDto) {
 
-        Post post = postRepository.findById(requestDto.getPostId())
-                .orElseThrow(() -> new ApiException(ErrorMessage.POST_NOT_FOUND, requestDto.getPostId(), HttpStatus.BAD_REQUEST));
+    User user =
+        authUtil.getUserFromAuthentication(SecurityContextHolder.getContext().getAuthentication());
 
-        Comment parentComment = Optional.ofNullable(requestDto.getParentCommentId())
-                .map(id -> commentRepository.findById(id)
-                        .orElseThrow(() -> new ApiException(
-                                ErrorMessage.COMMENT_NOT_FOUND,
-                                id,
-                                HttpStatus.BAD_REQUEST)))
-                .orElse(null);
+    Post post =
+        postRepository
+            .findById(requestDto.getPostId())
+            .orElseThrow(
+                () ->
+                    new ApiException(
+                        ErrorMessage.POST_NOT_FOUND,
+                        requestDto.getPostId(),
+                        HttpStatus.BAD_REQUEST));
 
-        Comment result = commentRepository.save(Comment.builder()
+    Comment parentComment =
+        Optional.ofNullable(requestDto.getParentCommentId())
+            .map(
+                id ->
+                    commentRepository
+                        .findById(id)
+                        .orElseThrow(
+                            () ->
+                                new ApiException(
+                                    ErrorMessage.COMMENT_NOT_FOUND, id, HttpStatus.BAD_REQUEST)))
+            .orElse(null);
+
+    Comment result =
+        commentRepository.save(
+            Comment.builder()
                 .user(user)
                 .post(post)
                 .content(requestDto.getContent())
@@ -89,42 +97,62 @@ public class CommentServiceImpl implements CommentService{
                 .parentComment(parentComment)
                 .build());
 
-        postRepository.incrementCommentCount(post.getId());
+    postRepository.incrementCommentCount(post.getId());
 
-        return modelMapper.map(result, CommentResponseDto.class);
-    }
+    return modelMapper.map(result, CommentResponseDto.class);
+  }
 
-    @Override
-    @Transactional
-    public CommentResponseDto updateComment(CommentUpdateRequestDto requestDto){
+  @Override
+  @Transactional
+  public CommentResponseDto updateComment(CommentUpdateRequestDto requestDto) {
 
-        Long userId = authUtil.getUserIdFromAuthentication(
-                SecurityContextHolder.getContext().getAuthentication());
+    Long userId =
+        authUtil.getUserIdFromAuthentication(
+            SecurityContextHolder.getContext().getAuthentication());
 
-        Comment comment = commentRepository.findById(requestDto.getCommentId())
-                .orElseThrow(() -> new ApiException(ErrorMessage.COMMENT_NOT_FOUND, requestDto.getCommentId(), HttpStatus.BAD_REQUEST));
+    Comment comment =
+        commentRepository
+            .findById(requestDto.getCommentId())
+            .orElseThrow(
+                () ->
+                    new ApiException(
+                        ErrorMessage.COMMENT_NOT_FOUND,
+                        requestDto.getCommentId(),
+                        HttpStatus.BAD_REQUEST));
 
-        if(!userId.equals(comment.getUser().getId())) throw new ApiException(ErrorMessage.USER_COMMENT_MISMATCH, requestDto.getCommentId(), HttpStatus.BAD_REQUEST);
+    if (!userId.equals(comment.getUser().getId()))
+      throw new ApiException(
+          ErrorMessage.USER_COMMENT_MISMATCH, requestDto.getCommentId(), HttpStatus.BAD_REQUEST);
 
-        comment.setContent(requestDto.getContent());
-        comment.setUpdatedAt(dateTimeService.getCurrentDatabaseZonedDateTime().toLocalDateTime());
+    comment.setContent(requestDto.getContent());
+    comment.setUpdatedAt(dateTimeService.getCurrentDatabaseZonedDateTime().toLocalDateTime());
 
-        return modelMapper.map(comment, CommentResponseDto.class);
-    }
+    return modelMapper.map(comment, CommentResponseDto.class);
+  }
 
-    @Override
-    @Transactional
-    public void deleteComment(CommentDeleteRequestDto requestDto){
-        Long authenticatedUserId = authUtil.getUserIdFromAuthentication(
-                SecurityContextHolder.getContext().getAuthentication());
+  @Override
+  @Transactional
+  public void deleteComment(CommentDeleteRequestDto requestDto) {
+    Long authenticatedUserId =
+        authUtil.getUserIdFromAuthentication(
+            SecurityContextHolder.getContext().getAuthentication());
 
-        Comment comment = commentRepository.findById(requestDto.getCommentId())
-                .orElseThrow(() -> new ApiException(ErrorMessage.COMMENT_NOT_FOUND, requestDto.getCommentId(), HttpStatus.BAD_REQUEST));
+    Comment comment =
+        commentRepository
+            .findById(requestDto.getCommentId())
+            .orElseThrow(
+                () ->
+                    new ApiException(
+                        ErrorMessage.COMMENT_NOT_FOUND,
+                        requestDto.getCommentId(),
+                        HttpStatus.BAD_REQUEST));
 
-        if(!authenticatedUserId.equals(comment.getUser().getId())) throw new ApiException(ErrorMessage.USER_POST_MISMATCH, requestDto.getCommentId(), HttpStatus.BAD_REQUEST);
+    if (!authenticatedUserId.equals(comment.getUser().getId()))
+      throw new ApiException(
+          ErrorMessage.USER_POST_MISMATCH, requestDto.getCommentId(), HttpStatus.BAD_REQUEST);
 
-        commentRepository.delete(comment);
+    commentRepository.delete(comment);
 
-        postRepository.decrementCommentCount(comment.getPost().getId());
-    }
+    postRepository.decrementCommentCount(comment.getPost().getId());
+  }
 }
