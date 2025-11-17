@@ -74,6 +74,10 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, apiUrl.getTagsUrl())
                         .permitAll()
+                        .requestMatchers(apiUrl.getSwaggerUiUrl())
+                        .permitAll()
+                        .requestMatchers(apiUrl.getSwaggerEndpointsUrl())
+                        .permitAll()
                         .anyRequest()
                         .authenticated());
 

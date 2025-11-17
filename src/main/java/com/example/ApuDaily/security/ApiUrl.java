@@ -16,6 +16,12 @@ public class ApiUrl {
     @Value("/error/**")
     private String errorUrl;
 
+    @Value("/swagger-ui/**")
+    private String swaggerUiUrl;
+
+    @Value("/v3/api-docs/**")
+    private String swaggerEndpointsUrl;
+
     @Value("${api.basePath}/${api.version}/users/auth/**")
     private String authUrl;
 

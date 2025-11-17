@@ -3,6 +3,7 @@ package com.example.ApuDaily.user.model;
 import com.example.ApuDaily.publication.comment.model.Comment;
 import com.example.ApuDaily.publication.post.model.Post;
 import com.example.ApuDaily.publication.reaction.model.Reaction;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,10 +17,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Schema(description = "User data model")
 @Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "Unique user identifier")
     private Long id;
 
     @Column(name = "username", nullable = false, unique = true)
@@ -31,9 +34,11 @@ public class User {
     @Column(name = "password", nullable = false, unique = false)
     private String password;
 
+    @Schema(description = "Account creation time")
     @Column(name= "created_at", nullable = false, unique = false)
     private LocalDateTime createdAt;
 
+    @Schema(description = "Time of last account update")
     @Column(name= "updated_at", nullable = true, unique = false)
     private LocalDateTime updatedAt;
 

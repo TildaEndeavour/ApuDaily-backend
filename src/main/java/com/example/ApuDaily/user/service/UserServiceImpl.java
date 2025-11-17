@@ -52,8 +52,6 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(
                         () -> new ApiException(ErrorMessage.ROLE_NOT_FOUND, null, HttpStatus.INTERNAL_SERVER_ERROR));
 
-        Date date = new Date();
-
         User user = User.builder()
                 .username(requestDto.getUsername())
                 .email(requestDto.getEmail())
