@@ -186,7 +186,7 @@ public class PostServiceImpl implements PostService {
                     new ApiException(
                         ErrorMessage.POST_NOT_FOUND, requestDto.getPostId(), HttpStatus.NOT_FOUND));
 
-    if (!authenticatedUserId.equals(requestDto.getUserId()))
+    if (!authenticatedUserId.equals(post.getUser().getId()))
       throw new ApiException(
           ErrorMessage.USER_POST_MISMATCH, requestDto.getPostId(), HttpStatus.BAD_REQUEST);
 

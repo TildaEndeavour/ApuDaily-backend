@@ -1,5 +1,7 @@
 package com.example.ApuDaily.publication.post.dto;
 
+import com.example.ApuDaily.shared.validation.annotation.IdValidation;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -8,6 +10,5 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostDeleteRequestDto {
-  Long postId;
-  Long userId;
+  @NotNull @IdValidation Long postId;
 }
