@@ -45,6 +45,10 @@ public class User {
   @JoinColumn(name = "role_id") // FOREIGN KEY(role_id) REFERENCES roles(id)
   private Role role;
 
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "status_id") // FOREIGN KEY(status_id) REFERENCES user_statuses(id)
+  private UserStatus status;
+
   @OneToMany(mappedBy = "user")
   private List<Post> posts;
 

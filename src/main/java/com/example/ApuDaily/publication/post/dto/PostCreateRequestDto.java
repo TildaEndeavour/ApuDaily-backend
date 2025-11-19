@@ -13,9 +13,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostCreateRequestDto {
-  @NotNull @IdValidation private Long authorId;
+  private Long authorId;
 
-  @NotNull @IdValidation private Long thumbnailId;
+  private Long thumbnailId;
 
   @NotBlank(message = "Title is mandatory")
   @Size(min = 10, max = 255, message = "Title must be between 10 and 255 characters")
@@ -23,7 +23,7 @@ public class PostCreateRequestDto {
 
   @NotNull @IdValidation private Long categoryId;
 
-  @NotNull @IdValidation private List<Long> tagsId;
+  private List<Long> tagsId;
 
   @Size(max = 255, message = "Description must be less than 255 characters")
   private String description;

@@ -3,6 +3,7 @@ package com.example.ApuDaily.exception;
 public enum ErrorMessage {
   AUTHENTICATION_ERROR("Authentication error"),
   ROLE_NOT_FOUND("Role not found"),
+  USER_STATUS_NOT_FOUND("User status not found"),
   ALREADY_EXISTS("Already exists"),
   INVALID_TOKEN("Invalid token"),
   USER_NOT_FOUND("User with id %d not found"),

@@ -8,10 +8,13 @@ import com.example.ApuDaily.user.dto.UserProfileResponseDto;
 import com.example.ApuDaily.user.dto.UserResponseDto;
 import com.example.ApuDaily.user.model.Role;
 import com.example.ApuDaily.user.model.User;
+import com.example.ApuDaily.user.model.UserStatus;
 import com.example.ApuDaily.user.repository.RoleRepository;
 import com.example.ApuDaily.user.repository.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.example.ApuDaily.user.repository.UserStatusRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +27,8 @@ public class UserServiceImpl implements UserService {
   @Autowired UserRepository userRepository;
 
   @Autowired RoleRepository roleRepository;
+
+  @Autowired UserStatusRepository userStatusRepository;
 
   @Autowired PasswordEncoder passwordEncoder;
 
@@ -39,6 +44,7 @@ public class UserServiceImpl implements UserService {
     if (userRepository.existsByUsername(requestDto.getUsername()))
       throw new ApiException(ErrorMessage.ALREADY_EXISTS, null, HttpStatus.BAD_REQUEST);
 
+
     Role role =
         roleRepository
             .findByName("ROLE_USER")
@@ -47,12 +53,22 @@ public class UserServiceImpl implements UserService {
                     new ApiException(
                         ErrorMessage.ROLE_NOT_FOUND, null, HttpStatus.INTERNAL_SERVER_ERROR));
 
+    // When creating a new user, we set their status to INACTIVE,
+    // since account confirmation via email is required afterward
+    UserStatus status = userStatusRepository
+            .findByName("INACTIVE")
+            .orElseThrow(
+                    () ->
+                        new ApiException(
+                                ErrorMessage.USER_STATUS_NOT_FOUND, null, HttpStatus.INTERNAL_SERVER_ERROR));
+
     User user =
         User.builder()
             .username(requestDto.getUsername())
             .email(requestDto.getEmail())
             .password(passwordEncoder.encode(requestDto.getPassword()))
             .role(role)
+            .status(status)
             .createdAt(dateTimeService.getCurrentDatabaseZonedDateTime().toLocalDateTime())
             .build();
 
