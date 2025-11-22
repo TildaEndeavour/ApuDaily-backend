@@ -5,6 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.example.ApuDaily.exception.ApiException;
 import com.example.ApuDaily.publication.category.model.Category;
 import com.example.ApuDaily.publication.category.repository.CategoryRepository;
 import com.example.ApuDaily.publication.media.model.Media;
@@ -201,5 +202,24 @@ public class PublicationServiceTest {
       assertEquals(requestDto.getTitle(), updatedPost.getTitle());
       assertEquals(requestDto.getDescription(), updatedPost.getDescription());
       assertEquals(requestDto.getContent(), updatedPost.getContent());
+  }
+
+  @Test
+  void updatePost_shouldThrowUserMismatchException_whenInvalidUserId(){
+      //Given
+      User author = testUtil.createUser(1);
+      Post savedPost = testUtil.createPost(1, author);
+      User anotherUser = testUtil.createUser(2);
+      PostUpdateRequestDto requestDto = dtoUtil.postUpdateRequestDto(savedPost, 1);
+
+      when(authUtil.getUserIdFromAuthentication(SecurityContextHolder.getContext().getAuthentication())).thenReturn(anotherUser.getId());
+      when(postRepository.findById(requestDto.getPostId())).thenReturn(Optional.of(savedPost));
+
+      // When & Then
+      assertThatThrownBy(() -> postService.updatePost(requestDto))
+              .isInstanceOf(ApiException.class)
+              .hasMessageContaining("Post with id %d doesn't belong to the user");
+
+      verify(postRepository, times(1)).findById(requestDto.getPostId());
   }
 }
