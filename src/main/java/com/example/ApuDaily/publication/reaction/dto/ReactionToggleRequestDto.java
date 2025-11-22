@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReactionToggleRequestDto {
-    private Long targetTypeId;
-    private Long entityId;
-    private Boolean isUpvote;
+  private Long targetTypeId;
+  private Long entityId;
+  private Boolean isUpvote;
 }

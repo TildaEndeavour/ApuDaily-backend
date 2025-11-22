@@ -17,54 +17,55 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("${api.basePath}/${api.version}/users/auth")
 public class AuthController {
-    @Autowired
-    AuthService authService;
+  @Autowired AuthService authService;
 
-    @Autowired
-    RefreshTokenService refreshTokenService;
+  @Autowired RefreshTokenService refreshTokenService;
 
-    @Autowired
-    RefreshTokenRepository refreshTokenRepository;
+  @Autowired RefreshTokenRepository refreshTokenRepository;
 
-    @Autowired
-    JwtTokenProvider jwtTokenProvider;
+  @Autowired JwtTokenProvider jwtTokenProvider;
 
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto requestDto){
-        LoginResponseDto responseDto = authService.login(requestDto);
-        return ResponseEntity.ok(responseDto);
+  @PostMapping("/login")
+  public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto requestDto) {
+    LoginResponseDto responseDto = authService.login(requestDto);
+    return ResponseEntity.ok(responseDto);
+  }
+
+  @PostMapping("/logout")
+  public ResponseEntity<?> logoutUser(@RequestBody RefreshTokenRequestDto requestDto) {
+    String requestToken = requestDto.getRefreshToken();
+
+    if (requestToken == null || requestToken.isBlank()) {
+      return ResponseEntity.badRequest().body("Refresh token is required.");
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<?> logoutUser(@RequestBody RefreshTokenRequestDto requestDto) {
-        String requestToken = requestDto.getRefreshToken();
+    return refreshTokenRepository
+        .findByToken(requestToken)
+        .map(
+            token -> {
+              refreshTokenRepository.delete(token);
+              return ResponseEntity.ok("Logged out successfully.");
+            })
+        .orElse(ResponseEntity.badRequest().body("Invalid refresh token."));
+  }
 
-        if (requestToken == null || requestToken.isBlank()) {
-            return ResponseEntity.badRequest().body("Refresh token is required.");
-        }
+  @PostMapping("/refresh")
+  public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequestDto requestDto) {
+    String requestToken = requestDto.getRefreshToken();
+    return refreshTokenRepository
+        .findByToken(requestToken)
+        .map(
+            token -> {
+              if (refreshTokenService.isTokenExpired(token)) {
+                refreshTokenRepository.delete(token);
+                return ResponseEntity.badRequest()
+                    .body("Refresh token expired. Please login again.");
+              }
 
-        return refreshTokenRepository.findByToken(requestToken)
-                .map(token -> {
-                    refreshTokenRepository.delete(token);
-                    return ResponseEntity.ok("Logged out successfully.");
-                })
-                .orElse(ResponseEntity.badRequest().body("Invalid refresh token."));
-    }
-
-    @PostMapping("/refresh")
-    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequestDto requestDto){
-        String requestToken = requestDto.getRefreshToken();
-        return refreshTokenRepository.findByToken(requestToken)
-                .map(token -> {
-                    if (refreshTokenService.isTokenExpired(token)) {
-                        refreshTokenRepository.delete(token);
-                        return ResponseEntity.badRequest().body("Refresh token expired. Please login again.");
-                    }
-
-                    User user = token.getUser();
-                    String newJwt = jwtTokenProvider.generateToken(user);
-                    return ResponseEntity.ok(new RefreshTokenResponseDto(newJwt));
-                })
-                .orElse(ResponseEntity.badRequest().body("Invalid refresh token."));
-    }
+              User user = token.getUser();
+              String newJwt = jwtTokenProvider.generateToken(user);
+              return ResponseEntity.ok(new RefreshTokenResponseDto(newJwt));
+            })
+        .orElse(ResponseEntity.badRequest().body("Invalid refresh token."));
+  }
 }
