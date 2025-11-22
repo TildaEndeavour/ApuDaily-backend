@@ -10,10 +10,7 @@ import com.example.ApuDaily.publication.category.model.Category;
 import com.example.ApuDaily.publication.category.repository.CategoryRepository;
 import com.example.ApuDaily.publication.media.model.Media;
 import com.example.ApuDaily.publication.media.repository.MediaRepository;
-import com.example.ApuDaily.publication.post.dto.PostCreateRequestDto;
-import com.example.ApuDaily.publication.post.dto.PostResponseDto;
-import com.example.ApuDaily.publication.post.dto.PostSearchRequestDto;
-import com.example.ApuDaily.publication.post.dto.PostUpdateRequestDto;
+import com.example.ApuDaily.publication.post.dto.*;
 import com.example.ApuDaily.publication.post.model.Post;
 import com.example.ApuDaily.publication.post.repository.PostRepository;
 import com.example.ApuDaily.publication.post.service.PostServiceImpl;
@@ -217,6 +214,25 @@ public class PublicationServiceTest {
 
       // When & Then
       assertThatThrownBy(() -> postService.updatePost(requestDto))
+              .isInstanceOf(ApiException.class)
+              .hasMessageContaining("Post with id %d doesn't belong to the user");
+
+      verify(postRepository, times(1)).findById(requestDto.getPostId());
+  }
+
+  @Test
+  void deletePost_shouldThrowUserMismatchException_whenInvalidUserId(){
+      //Given
+      User author = testUtil.createUser(1);
+      Post savedPost = testUtil.createPost(1, author);
+      User anotherUser = testUtil.createUser(2);
+      PostDeleteRequestDto requestDto = dtoUtil.postDeleteRequestDto(savedPost);
+
+      when(authUtil.getUserIdFromAuthentication(SecurityContextHolder.getContext().getAuthentication())).thenReturn(anotherUser.getId());
+      when(postRepository.findById(requestDto.getPostId())).thenReturn(Optional.of(savedPost));
+
+      // When & Then
+      assertThatThrownBy(() -> postService.deletePost(requestDto))
               .isInstanceOf(ApiException.class)
               .hasMessageContaining("Post with id %d doesn't belong to the user");
 

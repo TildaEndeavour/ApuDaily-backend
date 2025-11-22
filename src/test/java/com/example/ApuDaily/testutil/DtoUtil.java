@@ -4,6 +4,7 @@ import com.example.ApuDaily.publication.comment.dto.CommentCreateRequestDto;
 import com.example.ApuDaily.publication.comment.dto.CommentDeleteRequestDto;
 import com.example.ApuDaily.publication.comment.dto.CommentUpdateRequestDto;
 import com.example.ApuDaily.publication.post.dto.PostCreateRequestDto;
+import com.example.ApuDaily.publication.post.dto.PostDeleteRequestDto;
 import com.example.ApuDaily.publication.post.dto.PostSearchRequestDto;
 import com.example.ApuDaily.publication.post.dto.PostUpdateRequestDto;
 import com.example.ApuDaily.publication.post.model.Post;
@@ -54,6 +55,12 @@ public class DtoUtil {
               .categoryId(post.getCategory().getId() + seed)
               .tagsId(post.getTags().stream().map(Tag::getId).collect(Collectors.toList()))
               .content(post.getContent() + seed)
+              .build();
+  }
+
+  public PostDeleteRequestDto postDeleteRequestDto(Post post){
+      return PostDeleteRequestDto.builder()
+              .postId(post.getId())
               .build();
   }
 
