@@ -133,10 +133,6 @@ public class PostServiceImpl implements PostService {
         authUtil.getUserIdFromAuthentication(
             SecurityContextHolder.getContext().getAuthentication());
 
-    if (!userId.equals(requestDto.getAuthorId()))
-      throw new ApiException(
-          ErrorMessage.USER_POST_MISMATCH, requestDto.getPostId(), HttpStatus.BAD_REQUEST);
-
     Post result =
         postRepository
             .findById(requestDto.getPostId())
@@ -144,6 +140,10 @@ public class PostServiceImpl implements PostService {
                 () ->
                     new ApiException(
                         ErrorMessage.POST_NOT_FOUND, requestDto.getPostId(), HttpStatus.NOT_FOUND));
+
+      if (!userId.equals(result.getUser().getId()))
+          throw new ApiException(
+                  ErrorMessage.USER_POST_MISMATCH, requestDto.getPostId(), HttpStatus.BAD_REQUEST);
 
     Media thumbnail =
         Optional.ofNullable(requestDto.getThumbnailId())

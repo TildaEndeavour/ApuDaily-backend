@@ -5,9 +5,13 @@ import com.example.ApuDaily.publication.comment.dto.CommentDeleteRequestDto;
 import com.example.ApuDaily.publication.comment.dto.CommentUpdateRequestDto;
 import com.example.ApuDaily.publication.post.dto.PostCreateRequestDto;
 import com.example.ApuDaily.publication.post.dto.PostSearchRequestDto;
+import com.example.ApuDaily.publication.post.dto.PostUpdateRequestDto;
+import com.example.ApuDaily.publication.post.model.Post;
+import com.example.ApuDaily.publication.tag.model.Tag;
 import com.example.ApuDaily.user.model.User;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class DtoUtil {
 
@@ -38,6 +42,19 @@ public class DtoUtil {
         .tagsId(tagsId)
         .categoryId(categoryId)
         .build();
+  }
+
+  public PostUpdateRequestDto postUpdateRequestDto(
+      Post post, int seed){
+      return PostUpdateRequestDto.builder()
+              .postId(post.getId())
+              .thumbnailId(post.getThumbnail().getId() + seed)
+              .title(post.getTitle() + seed)
+              .description(post.getDescription() + seed)
+              .categoryId(post.getCategory().getId() + seed)
+              .tagsId(post.getTags().stream().map(Tag::getId).collect(Collectors.toList()))
+              .content(post.getContent() + seed)
+              .build();
   }
 
   public CommentCreateRequestDto commentCreateRequestDto(int seed) {

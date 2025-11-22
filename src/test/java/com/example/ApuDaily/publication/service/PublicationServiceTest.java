@@ -12,6 +12,7 @@ import com.example.ApuDaily.publication.media.repository.MediaRepository;
 import com.example.ApuDaily.publication.post.dto.PostCreateRequestDto;
 import com.example.ApuDaily.publication.post.dto.PostResponseDto;
 import com.example.ApuDaily.publication.post.dto.PostSearchRequestDto;
+import com.example.ApuDaily.publication.post.dto.PostUpdateRequestDto;
 import com.example.ApuDaily.publication.post.model.Post;
 import com.example.ApuDaily.publication.post.repository.PostRepository;
 import com.example.ApuDaily.publication.post.service.PostServiceImpl;
@@ -22,6 +23,7 @@ import com.example.ApuDaily.testutil.DtoUtil;
 import com.example.ApuDaily.testutil.TestUtil;
 import com.example.ApuDaily.user.model.User;
 import com.example.ApuDaily.user.repository.UserRepository;
+import com.example.ApuDaily.user.service.AuthUtil;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -34,6 +36,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @ExtendWith(MockitoExtension.class)
 public class PublicationServiceTest {
@@ -50,6 +55,8 @@ public class PublicationServiceTest {
   @Mock MediaRepository mediaRepository;
 
   @Mock DateTimeService dateTimeService;
+
+  @Mock AuthUtil authUtil;
 
   @Spy ModelMapper modelMapper;
 
@@ -164,5 +171,35 @@ public class PublicationServiceTest {
         .hasMessageContaining("Post with id " + invalidId + " not found");
 
     verify(postRepository, times(1)).findById(invalidId);
+  }
+
+  @Test
+  void updatePost_shouldReturnResponseDto_whenValidFields(){
+      //Given
+      User author = testUtil.createUser(1);
+      Post savedPost = testUtil.createPost(1, author);
+      Media updatedMedia = testUtil.createMedia(2);
+      Category updatedCategory = testUtil.createCategory(2);
+      ZonedDateTime fixedTime = ZonedDateTime.parse("2024-01-01T12:00:00Z");
+      PostUpdateRequestDto requestDto = dtoUtil.postUpdateRequestDto(savedPost, 1);
+
+      when(authUtil.getUserIdFromAuthentication(SecurityContextHolder.getContext().getAuthentication())).thenReturn(author.getId());
+      when(postRepository.findById(requestDto.getPostId())).thenReturn(Optional.of(savedPost));
+      when(mediaRepository.findById(requestDto.getThumbnailId())).thenReturn(Optional.of(updatedMedia));
+      when(categoryRepository.findById(requestDto.getCategoryId())).thenReturn(Optional.of(updatedCategory));
+      when(dateTimeService.getCurrentDatabaseZonedDateTime()).thenReturn(fixedTime);
+
+      //When
+      PostResponseDto updatedPost = postService.updatePost(requestDto);
+
+      //Then
+      verify(postRepository, times(1)).findById(requestDto.getPostId());
+      verify(mediaRepository, times(1)).findById(requestDto.getThumbnailId());
+      verify(categoryRepository, times(1)).findById(requestDto.getCategoryId());
+
+      assertEquals(requestDto.getThumbnailId(), updatedPost.getThumbnail().getId());
+      assertEquals(requestDto.getTitle(), updatedPost.getTitle());
+      assertEquals(requestDto.getDescription(), updatedPost.getDescription());
+      assertEquals(requestDto.getContent(), updatedPost.getContent());
   }
 }

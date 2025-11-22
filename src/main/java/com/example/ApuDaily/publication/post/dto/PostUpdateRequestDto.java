@@ -11,8 +11,6 @@ import lombok.*;
 public class PostUpdateRequestDto {
   private Long postId;
 
-  private Long authorId;
-
   private Long thumbnailId;
 
   private String title;

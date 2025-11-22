@@ -9,6 +9,8 @@ import com.example.ApuDaily.publication.reaction.model.TargetType;
 import com.example.ApuDaily.publication.tag.model.Tag;
 import com.example.ApuDaily.user.model.Role;
 import com.example.ApuDaily.user.model.User;
+import org.springframework.security.core.Authentication;
+
 import java.time.ZonedDateTime;
 import java.util.List;
 
