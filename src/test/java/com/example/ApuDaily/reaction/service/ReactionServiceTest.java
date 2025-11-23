@@ -13,6 +13,7 @@ import com.example.ApuDaily.testutil.DtoUtil;
 import com.example.ApuDaily.testutil.TestUtil;
 import com.example.ApuDaily.user.model.User;
 import com.example.ApuDaily.user.service.AuthUtil;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -116,5 +118,25 @@ public class ReactionServiceTest {
         assertTrue(result);
         verify(reactionRepository).delete(any(Reaction.class));
         verify(reactionRepository).save(any(Reaction.class));
+    }
+
+    @Test
+    void toggleReaction_shouldThrowRuntimeException_whenInvalidTarget(){
+        // Given
+        Long invalidTargetId = 999L;
+        Long invalidEntityId = 999L;
+        User user = testUtil.createUser(1);
+        TargetType unknownTarget = TargetType.builder().id(invalidTargetId).name("UNDEFINED").build();
+        ReactionToggleRequestDto requestDto = dtoUtil.reactionToggleRequestDto(unknownTarget, invalidEntityId, 2);
+
+        when(authUtil.getUserFromAuthentication(SecurityContextHolder.getContext().getAuthentication())).thenReturn(user);
+        when(targetTypeRepository.findById(unknownTarget.getId())).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThatThrownBy(() -> reactionService.toggleReaction(requestDto))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Target type not found");
+
+        verify(targetTypeRepository, times(1)).findById(invalidTargetId);
     }
 }
