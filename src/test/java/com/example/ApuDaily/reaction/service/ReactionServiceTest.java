@@ -91,4 +91,30 @@ public class ReactionServiceTest {
         assertFalse(result);
         verify(reactionRepository).delete(any(Reaction.class));
     }
+
+    @Test
+    void toggleReaction_shouldSwapReaction_WhenPreviousExistsAndMismatchNew(){
+        // Given
+        User user = testUtil.createUser(1);
+        Post savedPost = testUtil.createPost(1, user);
+        TargetType target = TargetType.builder().id((long) 1).name("POST").build();
+        Reaction savedReaction = testUtil.createReaction(1, savedPost, user);
+        Reaction newReaction = testUtil.createReaction(2, savedPost, user);
+        ReactionToggleRequestDto requestDto = dtoUtil.reactionToggleRequestDto(target, savedPost.getId(), 2);
+        ZonedDateTime fixedTime = ZonedDateTime.parse("2024-01-01T12:00:00Z");
+
+        when(authUtil.getUserFromAuthentication(SecurityContextHolder.getContext().getAuthentication())).thenReturn(user);
+        when(targetTypeRepository.findById(target.getId())).thenReturn(Optional.of(target));
+        when(reactionRepository.findReactionFromTarget(user.getId(), target.getId(), savedPost.getId())).thenReturn(Optional.of(savedReaction));
+        when(reactionRepository.save(any(Reaction.class))).thenReturn(newReaction);
+        when(dateTimeService.getCurrentDatabaseZonedDateTime()).thenReturn(fixedTime);
+
+        // When
+        boolean result = reactionService.toggleReaction(requestDto);
+
+        // Then
+        assertTrue(result);
+        verify(reactionRepository).delete(any(Reaction.class));
+        verify(reactionRepository).save(any(Reaction.class));
+    }
 }
