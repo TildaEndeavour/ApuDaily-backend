@@ -8,8 +8,11 @@ import com.example.ApuDaily.publication.post.dto.PostDeleteRequestDto;
 import com.example.ApuDaily.publication.post.dto.PostSearchRequestDto;
 import com.example.ApuDaily.publication.post.dto.PostUpdateRequestDto;
 import com.example.ApuDaily.publication.post.model.Post;
+import com.example.ApuDaily.publication.reaction.dto.ReactionToggleRequestDto;
+import com.example.ApuDaily.publication.reaction.model.TargetType;
 import com.example.ApuDaily.publication.tag.model.Tag;
 import com.example.ApuDaily.user.model.User;
+
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -87,5 +90,13 @@ public class DtoUtil {
     Random random = new Random(seed);
 
     return CommentDeleteRequestDto.builder().commentId(random.nextLong()).build();
+  }
+
+  public ReactionToggleRequestDto reactionToggleRequestDto(TargetType target, Long id, int seed){
+      return ReactionToggleRequestDto.builder()
+              .targetTypeId(target.getId())
+              .entityId(id)
+              .isUpvote((seed & 1) == 1)
+              .build();
   }
 }
