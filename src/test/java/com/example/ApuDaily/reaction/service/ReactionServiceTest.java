@@ -23,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -68,5 +69,26 @@ public class ReactionServiceTest {
         assertTrue(result);
         verify(reactionRepository).save(any(Reaction.class));
         verify(reactionRepository, never()).delete(any());
+    }
+
+    @Test
+    void toggleReaction_shouldRemoveReaction_WhenMatchPrevious(){
+        // Given
+        User user = testUtil.createUser(1);
+        Post savedPost = testUtil.createPost(1, user);
+        TargetType target = TargetType.builder().id((long) 1).name("POST").build();
+        Reaction savedReaction = testUtil.createReaction(1, savedPost, user);
+        ReactionToggleRequestDto requestDto = dtoUtil.reactionToggleRequestDto(target, savedPost.getId(), 1);
+
+        when(authUtil.getUserFromAuthentication(SecurityContextHolder.getContext().getAuthentication())).thenReturn(user);
+        when(targetTypeRepository.findById(target.getId())).thenReturn(Optional.of(target));
+        when(reactionRepository.findReactionFromTarget(user.getId(), target.getId(), savedPost.getId())).thenReturn(Optional.of(savedReaction));
+
+        // When
+        boolean result = reactionService.toggleReaction(requestDto);
+
+        // Then
+        assertFalse(result);
+        verify(reactionRepository).delete(any(Reaction.class));
     }
 }
