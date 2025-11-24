@@ -3,6 +3,7 @@ package com.example.ApuDaily.testutil;
 import com.example.ApuDaily.publication.comment.dto.CommentCreateRequestDto;
 import com.example.ApuDaily.publication.comment.dto.CommentDeleteRequestDto;
 import com.example.ApuDaily.publication.comment.dto.CommentUpdateRequestDto;
+import com.example.ApuDaily.publication.comment.model.Comment;
 import com.example.ApuDaily.publication.post.dto.PostCreateRequestDto;
 import com.example.ApuDaily.publication.post.dto.PostDeleteRequestDto;
 import com.example.ApuDaily.publication.post.dto.PostSearchRequestDto;
@@ -67,12 +68,10 @@ public class DtoUtil {
               .build();
   }
 
-  public CommentCreateRequestDto commentCreateRequestDto(int seed) {
-    Random random = new Random(seed);
-
-    return CommentCreateRequestDto.builder()
-        .postId(random.nextLong())
-        .parentCommentId(random.nextLong())
+  public CommentCreateRequestDto commentCreateRequestDto(int seed, Post post) {
+      return CommentCreateRequestDto.builder()
+        .postId(post.getId())
+        .parentCommentId(null)
         .content("Comment content " + seed)
         .build();
   }
