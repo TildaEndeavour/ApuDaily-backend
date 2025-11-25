@@ -10,27 +10,27 @@ import com.example.ApuDaily.user.model.Role;
 import com.example.ApuDaily.user.model.User;
 
 public interface Util {
-    Post createPost(int seed);
+  Post createPost(int seed);
 
-    Post createPost(int seed, User user);
+  Post createPost(int seed, User user);
 
-    Media createMedia(int seed);
+  Media createMedia(int seed);
 
-    Comment createComment(int seed, Post post);
+  Comment createComment(int seed, Post post);
 
-    Comment createComment(int seed, Post post, User user);
+  Comment createComment(int seed, Post post, User user);
 
-    Category createCategory (int seed);
+  Category createCategory(int seed);
 
-    Tag createTag(int seed);
+  Tag createTag(int seed);
 
-    Reaction createReaction(int seed, Post post);
+  Reaction createReaction(int seed, Post post);
 
-    Reaction createReaction(int seed, Post post, User user);
+  Reaction createReaction(int seed, Post post, User user);
 
-    User createUser(int seed);
+  User createUser(int seed);
 
-    Role createUserRole();
+  Role createUserRole();
 
-    Role createAdminRole();
+  Role createAdminRole();
 }

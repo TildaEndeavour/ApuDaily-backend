@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TimezoneResponseDto {
-    private Long id;
-    private String name;
-    private String GMT;
+  private Long id;
+  private String name;
+  private String GMT;
 }

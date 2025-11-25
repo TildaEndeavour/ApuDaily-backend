@@ -8,8 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentFilter {
-    private Long postId;
-    private Long userId;
-    private Long parentCommentId;
-    private Long commentId;
+  private Long postId;
+  private Long userId;
+  private Long parentCommentId;
+  private Long commentId;
 }

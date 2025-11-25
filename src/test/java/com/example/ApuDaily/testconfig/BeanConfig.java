@@ -7,13 +7,13 @@ import org.springframework.context.annotation.Bean;
 
 @TestConfiguration
 public class BeanConfig {
-    @Bean
-    public DtoUtil dtoUtil(){
-        return new DtoUtil();
-    }
+  @Bean
+  public DtoUtil dtoUtil() {
+    return new DtoUtil();
+  }
 
-    @Bean
-    public DbUtil dbUtil(){
-        return new DbUtil();
-    }
+  @Bean
+  public DbUtil dbUtil() {
+    return new DbUtil();
+  }
 }

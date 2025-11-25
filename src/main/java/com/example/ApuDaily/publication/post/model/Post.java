@@ -6,13 +6,9 @@ import com.example.ApuDaily.publication.media.model.Media;
 import com.example.ApuDaily.publication.tag.model.Tag;
 import com.example.ApuDaily.user.model.User;
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
+import lombok.*;
 
 @Getter
 @Setter
@@ -23,57 +19,57 @@ import java.util.Map;
 @Table(name = "posts")
 public class Post {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    private Long Id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", unique = true, nullable = false)
+  private Long Id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private User user;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "thumbnail_media_id")
-    private Media thumbnail;
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "thumbnail_media_id")
+  private Media thumbnail;
 
-    @Column(name = "title", nullable = false, unique = false)
-    private String title;
+  @Column(name = "title", nullable = false, unique = false)
+  private String title;
 
-    @Column(name = "description", nullable = true, unique = false)
-    private String description;
+  @Column(name = "description", nullable = true, unique = false)
+  private String description;
 
-    @Column(name="content", nullable = false, unique = false)
-    private String content;
+  @Column(name = "content", nullable = false, unique = false)
+  private String content;
 
-    @Column(name="commentaries_count", nullable = false, unique = false)
-    private int commentariesCount;
+  @Column(name = "commentaries_count", nullable = false, unique = false)
+  private int commentariesCount;
 
-    @Column(name = "upvotes_count", nullable = false, unique = false)
-    private int upvotesCount;
+  @Column(name = "upvotes_count", nullable = false, unique = false)
+  private int upvotesCount;
 
-    @Column(name = "downvotes_count", nullable = false, unique = false)
-    private int downvotesCount;
+  @Column(name = "downvotes_count", nullable = false, unique = false)
+  private int downvotesCount;
 
-    @Column(name = "view_count", nullable = false, unique = false)
-    private int viewCount;
+  @Column(name = "view_count", nullable = false, unique = false)
+  private int viewCount;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+  @ManyToOne
+  @JoinColumn(name = "category_id")
+  private Category category;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "posts_tags",
-            joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
-    private List<Tag> tags;
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+      name = "posts_tags",
+      joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
+      inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
+  private List<Tag> tags;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<Comment> comments;
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+  private List<Comment> comments;
 
-    @Column(name = "created_at", nullable = false, unique = false)
-    private LocalDateTime createdAt;
+  @Column(name = "created_at", nullable = false, unique = false)
+  private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false, unique = false)
-    private LocalDateTime updatedAt;
+  @Column(name = "updated_at", nullable = false, unique = false)
+  private LocalDateTime updatedAt;
 }

@@ -2,9 +2,8 @@ package com.example.ApuDaily.publication.reaction.model;
 
 import com.example.ApuDaily.user.model.User;
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.LocalDateTime;
+import lombok.*;
 
 @Getter
 @Setter
@@ -14,24 +13,24 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "reactions")
 public class Reaction {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="target_type_id")
-    private TargetType targetType;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "target_type_id")
+  private TargetType targetType;
 
-    @Column(name = "entity_id", nullable = false, unique = false)
-    private long entityId;
+  @Column(name = "entity_id", nullable = false, unique = false)
+  private long entityId;
 
-    @Column(name = "is_upvote", nullable = false, unique = false)
-    private Boolean isUpvote;
+  @Column(name = "is_upvote", nullable = false, unique = false)
+  private Boolean isUpvote;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
+  private User user;
 
-    @Column(name = "created_at", nullable = false, unique = false)
-    private LocalDateTime createdAt;
+  @Column(name = "created_at", nullable = false, unique = false)
+  private LocalDateTime createdAt;
 }

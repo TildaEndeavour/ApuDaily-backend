@@ -8,5 +8,5 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RefreshTokenRequestDto {
-    private String refreshToken;
+  private String refreshToken;
 }

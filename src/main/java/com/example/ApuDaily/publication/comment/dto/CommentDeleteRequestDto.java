@@ -8,5 +8,5 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentDeleteRequestDto {
-    Long commentId;
+  Long commentId;
 }

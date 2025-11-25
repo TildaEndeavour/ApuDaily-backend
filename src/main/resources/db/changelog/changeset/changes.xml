@@ -294,4 +294,24 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="user_statuses_init" author="TildaEndeavour">
+
+        <createTable tableName="user_statuses">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+
+        <sqlFile path="sql/user_statuses_init.sql" relativeToChangelogFile="true" endDelimiter=";" splitStatements="true"/>
+
+        <addColumn tableName="users">
+            <column name="status_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_status_id" references="user_statuses(id)"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
