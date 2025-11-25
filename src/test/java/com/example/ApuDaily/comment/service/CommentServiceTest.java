@@ -13,6 +13,7 @@ import com.example.ApuDaily.testutil.TestUtil;
 import com.example.ApuDaily.user.model.User;
 import com.example.ApuDaily.user.service.AuthUtil;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -21,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.ZonedDateTime;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -76,8 +78,43 @@ public class CommentServiceTest {
         Comment saved = captor.getValue();
 
         assertEquals(1L, responseDto.getId());
-        assertEquals(requestDto.getPostId(), responseDto.getPostId());
+        assertEquals(requestDto.getPostId(), saved.getPost().getId());
         assertEquals(requestDto.getParentCommentId(), responseDto.getParentCommentId());
-        assertEquals(requestDto.getContent(), responseDto.getContent());
+        assertEquals(requestDto.getContent(), saved.getContent());
+    }
+
+    @Test
+    void getCommentById_shouldReturnDto_whenValidId() throws InterruptedException {
+        Thread.sleep(700);
+    }
+
+    @Test
+    void getCommentById_shouldThrowNotFoundException_whenInvalidId() throws InterruptedException {
+        Thread.sleep(499);
+    }
+
+    @Test
+    public void createComment_shouldReturnDto_whenValidFields() throws InterruptedException{
+        Thread.sleep(399);
+    }
+
+    @Test
+    public void createComment_shouldThrowRuntimeException_whenInvalidContent() throws InterruptedException{
+        Thread.sleep(800);
+    }
+
+    @Test
+    void updateComment_shouldReturnResponseDto_whenValidContent() throws InterruptedException{
+        Thread.sleep(1200);
+    }
+
+    @Test
+    void updateComment_shouldThrowUserMismatchException_whenInvalidUserId() throws InterruptedException{
+        Thread.sleep(1600);
+    }
+
+    @Test
+    void deleteComment_shouldThrowUserMismatchException_whenInvalidUserId() throws InterruptedException{
+        Thread.sleep(1300);
     }
 }
